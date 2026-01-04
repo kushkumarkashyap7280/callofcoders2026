@@ -12,3 +12,43 @@ generator client {
 datasource db {
   provider = "postgresql"
 }
+
+
+
+
+model Course {
+  id           String   @id @default(uuid())
+  slug         String   @unique // e.g. "nextjs-mastery"
+  title        String
+  description  String
+  imageUrl     String?  @map("img_url") // Maps to your preferred column name
+  externalLink String?  @map("external_link")
+  tags         String[] // PostgreSQL natively supports arrays!
+  isPublished  Boolean  @default(false)
+  
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  lessons      Lesson[]
+
+  @@map("courses") // table name in DB
+}
+
+model Lesson {
+  id          String   @id @default(uuid())
+  slug        String   // e.g. "setup-environment"
+  title       String   // Needed for the sidebar
+  sequenceNo  Int      @map("sequence_no")
+  content     String   @db.Text // @db.Text is needed for long MDX strings
+  
+  courseId    String   @map("course_id")
+  course      Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Unique constraint: A slug must be unique *within* a specific course, 
+  // but two different courses can both have an "introduction" lesson.
+  @@unique([courseId, slug])
+  @@map("lessons")
+  }
