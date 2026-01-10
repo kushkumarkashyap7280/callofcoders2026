@@ -30,6 +30,7 @@ model Course {
   updatedAt    DateTime @updatedAt
 
   lessons      Lesson[]
+  enrollments  Enrollment[]
 
   @@map("courses") // table name in DB
 }
@@ -52,3 +53,45 @@ model Lesson {
   @@unique([courseId, slug])
   @@map("lessons")
   }
+
+model User {
+  id            String    @id @default(uuid())
+  email         String    @unique
+  name          String?
+  googleId      String?   @map("google_id") @unique
+  passwordHash  String    @map("password_hash")
+  isAdmin       Boolean   @default(false) @map("is_admin")  
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @updatedAt      @map("updated_at")  
+  enrollments   Enrollment[] 
+  @@map("users")
+}
+
+model Enrollment {
+  id              String    @id @default(uuid())
+  userId          String    @map("user_id")
+  courseId        String    @map("course_id")
+  enrolledAt      DateTime  @default(now()) @map("enrolled_at")
+  lastAccessedAt  DateTime? @map("last_accessed_at")
+  currentLessonId String?   @map("current_lesson_id") // Track progress
+  isCompleted     Boolean   @default(false) @map("is_completed")
+  
+  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  course          Course    @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  
+  @@unique([userId, courseId]) // A user can only enroll once per course
+  @@map("enrollments")
+}
+
+model blogs {
+  id          String   @id @default(uuid())
+  title       String
+  content     String   @db.Text
+  author      String
+  publishedAt DateTime @default(now()) @map("published_at")
+
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt      @map("updated_at")
+
+  @@map("blogs")
+}
