@@ -1,5 +1,5 @@
 import CodeRunner from '@/components/CodeRunner'
-import UploadMdx from '@/components/UploadMdx'
+
 import React from 'react'
 
 function page() {
