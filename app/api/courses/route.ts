@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma';
+import prisma from '@/lib/prisma';
 
 // GET all courses
 export async function GET() {
@@ -7,10 +7,10 @@ export async function GET() {
     const courses = await prisma.course.findMany({
       include: {
         lessons: {
-          orderBy: { order: 'asc' },
+          orderBy: { createdAt: 'asc' },
         },
       },
-      orderBy: { order: 'asc' },
+      orderBy: { createdAt: 'asc' },
     });
 
     return NextResponse.json(courses);

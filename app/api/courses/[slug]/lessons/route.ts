@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma';
+import prisma from '@/lib/prisma';
 
 // GET all lessons for a course
 export async function GET(
@@ -11,7 +11,7 @@ export async function GET(
       where: { 
         course: { slug: params.slug } 
       },
-      orderBy: { order: 'asc' },
+      orderBy: { sequenceNo: 'asc' },
     });
 
     return NextResponse.json(lessons);
@@ -47,7 +47,7 @@ export async function POST(
         title: data.title,
         slug: data.slug,
         content: data.content,
-        order: data.order || 0,
+        sequenceNo: data.sequenceNo || 0,
         courseId: course.id,
       },
     });

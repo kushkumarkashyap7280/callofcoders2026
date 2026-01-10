@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma';
+import prisma from '@/lib/prisma';
 
 // GET single course by slug
 export async function GET(
@@ -11,7 +11,7 @@ export async function GET(
       where: { slug: params.slug },
       include: {
         lessons: {
-          orderBy: { order: 'asc' },
+          orderBy: { sequenceNo: 'asc' },
         },
       },
     });
