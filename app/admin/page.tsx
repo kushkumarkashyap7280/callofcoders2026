@@ -74,7 +74,7 @@ export default function AdminDashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-red-50 to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 py-12 px-4">
+    <div className="min-h-screen bg-linear-to-br from-orange-50 via-red-50 to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 py-12 px-4">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -89,13 +89,13 @@ export default function AdminDashboard() {
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
                 transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
-                className="w-20 h-20 rounded-full bg-gradient-to-br from-orange-600 to-red-600 flex items-center justify-center shadow-lg"
+                className="w-20 h-20 rounded-full bg-linear-to-br from-orange-600 to-red-600 flex items-center justify-center shadow-lg"
               >
                 <ShieldCheck className="w-10 h-10 text-white" />
               </motion.div>
               <div>
                 <div className="flex items-center gap-2 mb-1">
-                  <h1 className="text-3xl font-bold bg-gradient-to-r from-orange-600 via-red-600 to-purple-600 bg-clip-text text-transparent">
+                  <h1 className="text-3xl font-bold bg-linear-to-r from-orange-600 via-red-600 to-purple-600 bg-clip-text text-transparent">
                     {admin.name || 'Admin'}
                   </h1>
                   <Crown className="w-6 h-6 text-yellow-500" />
@@ -190,7 +190,7 @@ export default function AdminDashboard() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.7 }}
-          className="mt-6 bg-gradient-to-r from-orange-600 to-red-600 rounded-2xl shadow-xl p-8 text-white"
+          className="mt-6 bg-linear-to-r from-orange-600 to-red-600 rounded-2xl shadow-xl p-8 text-white"
         >
           <h2 className="text-2xl font-bold mb-2">Admin Control Panel</h2>
           <p className="opacity-90">

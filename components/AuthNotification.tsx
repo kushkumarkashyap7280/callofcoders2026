@@ -40,14 +40,14 @@ export default function AuthNotification({ user, onClose }: AuthNotificationProp
           transition={{ duration: 0.3, ease: "easeOut" }}
           className="fixed top-4 left-1/2 -translate-x-1/2 z-50 max-w-md w-full mx-4"
         >
-          <div className="bg-gradient-to-r from-green-500 to-emerald-600 text-white px-6 py-4 rounded-xl shadow-2xl border border-green-400/20 backdrop-blur-sm">
+          <div className="bg-linear-to-r from-green-500 to-emerald-600 text-white px-6 py-4 rounded-xl shadow-2xl border border-green-400/20 backdrop-blur-sm">
             <div className="flex items-start gap-3">
               <motion.div
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
                 transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
               >
-                <CheckCircle2 className="w-6 h-6 mt-0.5 flex-shrink-0" />
+                <CheckCircle2 className="w-6 h-6 mt-0.5 shrink-0" />
               </motion.div>
               
               <div className="flex-1 min-w-0">
@@ -73,7 +73,7 @@ export default function AuthNotification({ user, onClose }: AuthNotificationProp
                 whileHover={{ scale: 1.1, rotate: 90 }}
                 whileTap={{ scale: 0.9 }}
                 onClick={handleClose}
-                className="text-white/80 hover:text-white transition-colors flex-shrink-0 p-1"
+                className="text-white/80 hover:text-white transition-colors shrink-0 p-1"
               >
                 <X className="w-5 h-5" />
               </motion.button>

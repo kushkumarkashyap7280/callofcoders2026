@@ -203,7 +203,7 @@
   
   /* Gradient text utility */
   .gradient-text {
-    @apply bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent;
+    @apply bg-linear-to-r from-primary via-accent to-primary bg-clip-text text-transparent;
     background-size: 200% auto;
     animation: shimmer 3s linear infinite;
   }
@@ -216,7 +216,7 @@
   
   /* Animated gradient background */
   .gradient-bg {
-    @apply bg-gradient-to-br from-primary/10 via-accent/10 to-primary/10;
+    @apply bg-linear-to-br from-primary/10 via-accent/10 to-primary/10;
     background-size: 200% 200%;
     animation: gradient 15s ease infinite;
   }

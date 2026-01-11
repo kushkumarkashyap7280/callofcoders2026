@@ -187,46 +187,6 @@ export default function UserSignupForm() {
     }
   }
 
-  const containerVariants = {
-    hidden: { opacity: 0, scale: 0.95 },
-    visible: {
-      opacity: 1,
-      scale: 1,
-      transition: {
-        duration: 0.5,
-        ease: [0.23, 1, 0.32, 1],
-        staggerChildren: 0.08
-      }
-    }
-  }
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { 
-      opacity: 1, 
-      y: 0,
-      transition: {
-        duration: 0.5,
-        ease: [0.23, 1, 0.32, 1]
-      }
-    }
-  }
-
-  const slideVariants = {
-    enter: (direction: number) => ({
-      x: direction > 0 ? 300 : -300,
-      opacity: 0
-    }),
-    center: {
-      x: 0,
-      opacity: 1
-    },
-    exit: (direction: number) => ({
-      x: direction < 0 ? 300 : -300,
-      opacity: 0
-    })
-  }
-
   const getStageNumber = () => {
     switch (stage) {
       case 'email': return 1
@@ -277,15 +237,19 @@ export default function UserSignupForm() {
             repeat: Infinity,
             repeatType: "loop",
           }}
+          className="absolute -top-20 -right-20 w-72 h-72 bg-purple-500/10 rounded-full blur-3xl pointer-events-none"
+        />
       <motion.div
-        variants={containerVariants}
-        initial="hidden"
-        animate="visible"
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.5 }}
         className="relative"
       >
         {/* Progress Indicator */}
         <motion.div 
-          variants={itemVariants}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.1 }}
           className="flex justify-center gap-2 mb-6"
         >
           {[1, 2, 3].map((step) => (
@@ -293,7 +257,7 @@ export default function UserSignupForm() {
               key={step}
               className={`h-1.5 rounded-full transition-all ${
                 step === getStageNumber() 
-                  ? 'w-12 bg-gradient-to-r from-primary to-purple-600' 
+                  ? 'w-12 bg-linear-to-r from-primary to-purple-600' 
                   : step < getStageNumber()
                   ? 'w-8 bg-primary/50'
                   : 'w-8 bg-muted'
@@ -306,14 +270,16 @@ export default function UserSignupForm() {
         </motion.div>
 
         <motion.div
-          variants={itemVariants}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
           className="text-center mb-8"
         >
           <motion.div
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
-            className="inline-flex items-center justify-center w-16 h-16 mb-4 rounded-2xl bg-gradient-to-br from-primary to-purple-600 shadow-lg shadow-primary/25"
+            className="inline-flex items-center justify-center w-16 h-16 mb-4 rounded-2xl bg-linear-to-br from-primary to-purple-600 shadow-lg shadow-primary/25"
           >
             {stage === 'verify' ? (
               <Mail className="w-8 h-8 text-white" />
@@ -331,7 +297,7 @@ export default function UserSignupForm() {
               exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.3 }}
             >
-              <h1 className="text-4xl font-bold bg-gradient-to-r from-primary via-purple-600 to-pink-600 bg-clip-text text-transparent mb-2">
+              <h1 className="text-4xl font-bold bg-linear-to-r from-primary via-purple-600 to-pink-600 bg-clip-text text-transparent mb-2">
                 {getStageTitle()}
               </h1>
               <p className="text-muted-foreground">{getStageDescription()}</p>
@@ -356,16 +322,19 @@ export default function UserSignupForm() {
             {stage === 'email' && (
               <motion.form
                 key="email"
-                custom={1}
-                variants={slideVariants}
-                initial="enter"
-                animate="center"
-                exit="exit"
+                initial={{ x: 300, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                exit={{ x: -300, opacity: 0 }}
                 transition={{ duration: 0.3 }}
                 onSubmit={handleEmailSubmit}
                 className="space-y-5"
               >
-                <motion.div variants={itemVariants} className="space-y-2">
+                <motion.div 
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5 }}
+                  className="space-y-2"
+                >
                   <Label htmlFor="email" className="flex items-center gap-2 text-sm font-medium">
                     <motion.div
                       animate={focusedField === 'email' ? { scale: 1.2, rotate: 360 } : { scale: 1, rotate: 0 }}
@@ -395,7 +364,12 @@ export default function UserSignupForm() {
                   </motion.div>
                 </motion.div>
 
-                <motion.div variants={itemVariants} className="pt-2">
+                <motion.div 
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: 0.3 }}
+                  className="pt-2"
+                >
                   <motion.div
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
@@ -403,7 +377,7 @@ export default function UserSignupForm() {
                     <Button
                       type="submit"
                       disabled={loading}
-                      className="w-full h-12 group bg-gradient-to-r from-primary via-purple-600 to-pink-600 hover:shadow-xl hover:shadow-primary/30 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="w-full h-12 group bg-linear-to-r from-primary via-purple-600 to-pink-600 hover:shadow-xl hover:shadow-primary/30 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
                       size="lg"
                     >
                       <span className="flex items-center gap-2">
@@ -428,7 +402,12 @@ export default function UserSignupForm() {
                   </motion.div>
                 </motion.div>
 
-                <motion.div variants={itemVariants} className="text-center text-sm">
+                <motion.div 
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: 0.2 }}
+                  className="text-center text-sm"
+                >
                   <p className="text-muted-foreground">
                     Already have an account?{' '}
                     <a href="/login" className="text-primary hover:text-purple-600 transition-colors font-medium hover:underline">
@@ -438,7 +417,12 @@ export default function UserSignupForm() {
                 </motion.div>
 
                 {/* Divider */}
-                <motion.div variants={itemVariants} className="relative">
+                <motion.div 
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: 0.3 }}
+                  className="relative"
+                >
                   <div className="absolute inset-0 flex items-center">
                     <div className="w-full border-t border-border"></div>
                   </div>
@@ -448,7 +432,11 @@ export default function UserSignupForm() {
                 </motion.div>
 
                 {/* Google Login Button */}
-                <motion.div variants={itemVariants}>
+                <motion.div 
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: 0.4 }}
+                >
                   <GoogleLoginButton />
                 </motion.div>
               </motion.form>
@@ -458,16 +446,19 @@ export default function UserSignupForm() {
             {stage === 'verify' && (
               <motion.form
                 key="verify"
-                custom={2}
-                variants={slideVariants}
-                initial="enter"
-                animate="center"
-                exit="exit"
+                initial={{ x: 300, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                exit={{ x: -300, opacity: 0 }}
                 transition={{ duration: 0.3 }}
                 onSubmit={handleVerifySubmit}
                 className="space-y-5"
               >
-                <motion.div variants={itemVariants} className="space-y-2">
+                <motion.div 
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5 }}
+                  className="space-y-2"
+                >
                   <Label htmlFor="verificationCode" className="flex items-center gap-2 text-sm font-medium">
                     <motion.div
                       animate={focusedField === 'verificationCode' ? { scale: 1.2, rotate: 360 } : { scale: 1, rotate: 0 }}
@@ -507,7 +498,12 @@ export default function UserSignupForm() {
                   )}
                 </motion.div>
 
-                <motion.div variants={itemVariants} className="text-center text-sm">
+                <motion.div 
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: 0.1 }}
+                  className="text-center text-sm"
+                >
                   <button
                     type="button"
                     onClick={handleResendOtp}
@@ -518,7 +514,12 @@ export default function UserSignupForm() {
                   </button>
                 </motion.div>
 
-                <motion.div variants={itemVariants} className="pt-2">
+                <motion.div 
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: 0.2 }}
+                  className="pt-2"
+                >
                   <motion.div
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
@@ -526,7 +527,7 @@ export default function UserSignupForm() {
                     <Button
                       type="submit"
                       disabled={loading || countdown === 0}
-                      className="w-full h-12 group bg-gradient-to-r from-primary via-purple-600 to-pink-600 hover:shadow-xl hover:shadow-primary/30 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="w-full h-12 group bg-linear-to-r from-primary via-purple-600 to-pink-600 hover:shadow-xl hover:shadow-primary/30 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
                       size="lg"
                     >
                       <span className="flex items-center gap-2">
@@ -553,7 +554,12 @@ export default function UserSignupForm() {
                   </motion.div>
                 </motion.div>
 
-                <motion.div variants={itemVariants} className="text-center text-sm">
+                <motion.div 
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: 0.3 }}
+                  className="text-center text-sm"
+                >
                   <button
                     type="button"
                     onClick={() => setStage('email')}
@@ -569,16 +575,19 @@ export default function UserSignupForm() {
             {stage === 'complete' && (
               <motion.form
                 key="complete"
-                custom={3}
-                variants={slideVariants}
-                initial="enter"
-                animate="center"
-                exit="exit"
+                initial={{ x: 300, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                exit={{ x: -300, opacity: 0 }}
                 transition={{ duration: 0.3 }}
                 onSubmit={handleCompleteSubmit}
                 className="space-y-5"
               >
-                <motion.div variants={itemVariants} className="space-y-2">
+                <motion.div 
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5 }}
+                  className="space-y-2"
+                >
                   <Label htmlFor="name" className="flex items-center gap-2 text-sm font-medium">
                     <motion.div
                       animate={focusedField === 'name' ? { scale: 1.2, rotate: 360 } : { scale: 1, rotate: 0 }}
@@ -608,7 +617,12 @@ export default function UserSignupForm() {
                   </motion.div>
                 </motion.div>
 
-                <motion.div variants={itemVariants} className="space-y-2">
+                <motion.div 
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: 0.2 }}
+                  className="space-y-2"
+                >
                   <Label htmlFor="password" className="flex items-center gap-2 text-sm font-medium">
                     <motion.div
                       animate={focusedField === 'password' ? { scale: 1.2, rotate: 360 } : { scale: 1, rotate: 0 }}
@@ -657,7 +671,12 @@ export default function UserSignupForm() {
                   </motion.div>
                 </motion.div>
 
-                <motion.div variants={itemVariants} className="space-y-2">
+                <motion.div 
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: 0.2 }}
+                  className="space-y-2"
+                >
                   <Label htmlFor="confirmPassword" className="flex items-center gap-2 text-sm font-medium">
                     <motion.div
                       animate={focusedField === 'confirmPassword' ? { scale: 1.2, rotate: 360 } : { scale: 1, rotate: 0 }}
@@ -706,7 +725,12 @@ export default function UserSignupForm() {
                   </motion.div>
                 </motion.div>
 
-                <motion.div variants={itemVariants} className="pt-2">
+                <motion.div 
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: 0.3 }}
+                  className="pt-2"
+                >
                   <motion.div
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
@@ -714,7 +738,7 @@ export default function UserSignupForm() {
                     <Button
                       type="submit"
                       disabled={loading}
-                      className="w-full h-12 group bg-gradient-to-r from-primary via-purple-600 to-pink-600 hover:shadow-xl hover:shadow-primary/30 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="w-full h-12 group bg-linear-to-r from-primary via-purple-600 to-pink-600 hover:shadow-xl hover:shadow-primary/30 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
                       size="lg"
                     >
                       <span className="flex items-center gap-2">

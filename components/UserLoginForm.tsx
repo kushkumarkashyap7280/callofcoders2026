@@ -60,31 +60,6 @@ export default function UserLoginForm() {
     })
   }
 
-  const containerVariants = {
-    hidden: { opacity: 0, scale: 0.95 },
-    visible: {
-      opacity: 1,
-      scale: 1,
-      transition: {
-        duration: 0.5,
-        ease: [0.23, 1, 0.32, 1],
-        staggerChildren: 0.08
-      }
-    }
-  }
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { 
-      opacity: 1, 
-      y: 0,
-      transition: {
-        duration: 0.5,
-        ease: [0.23, 1, 0.32, 1]
-      }
-    }
-  }
-
   return (
     <div className="w-full max-w-md mx-auto relative">
       {/* Floating background elements */}
@@ -112,31 +87,35 @@ export default function UserLoginForm() {
       />
 
       <motion.div
-        variants={containerVariants}
-        initial="hidden"
-        animate="visible"
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.5 }}
         className="relative"
       >
         <motion.div
-          variants={itemVariants}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.1 }}
           className="text-center mb-8"
         >
           <motion.div
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
-            className="inline-flex items-center justify-center w-16 h-16 mb-4 rounded-2xl bg-gradient-to-br from-blue-600 to-purple-600 shadow-lg shadow-blue-600/25"
+            className="inline-flex items-center justify-center w-16 h-16 mb-4 rounded-2xl bg-linear-to-br from-blue-600 to-purple-600 shadow-lg shadow-blue-600/25"
           >
             <LogIn className="w-8 h-8 text-white" />
           </motion.div>
-          <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent mb-2">
+          <h1 className="text-4xl font-bold bg-linear-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent mb-2">
             Welcome Back
           </h1>
           <p className="text-muted-foreground">Sign in to continue your learning</p>
         </motion.div>
 
         <motion.form
-          variants={itemVariants}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
           onSubmit={handleSubmit}
           className="space-y-5 bg-card/50 backdrop-blur-xl p-8 rounded-2xl border border-border/50 shadow-2xl shadow-black/10 dark:shadow-black/50"
         >
@@ -151,7 +130,12 @@ export default function UserLoginForm() {
           </motion.div>
         )}
 
-        <motion.div variants={itemVariants} className="space-y-2">
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.3 }}
+          className="space-y-2"
+        >
           <Label htmlFor="email" className="flex items-center gap-2 text-sm font-medium">
             <motion.div
               animate={focusedField === 'email' ? { scale: 1.2, rotate: 360 } : { scale: 1, rotate: 0 }}
@@ -180,7 +164,12 @@ export default function UserLoginForm() {
           </motion.div>
         </motion.div>
 
-        <motion.div variants={itemVariants} className="space-y-2">
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.4 }}
+          className="space-y-2"
+        >
           <div className="flex items-center justify-between">
             <Label htmlFor="password" className="flex items-center gap-2 text-sm font-medium">
               <motion.div
@@ -238,7 +227,12 @@ export default function UserLoginForm() {
           </motion.div>
         </motion.div>
 
-        <motion.div variants={itemVariants} className="pt-2">
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.5 }}
+          className="pt-2"
+        >
           <motion.div
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
@@ -246,7 +240,7 @@ export default function UserLoginForm() {
             <Button
               type="submit"
               disabled={loading}
-              className="w-full h-12 group bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 hover:shadow-xl hover:shadow-blue-600/30 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full h-12 group bg-linear-to-r from-blue-600 via-purple-600 to-pink-600 hover:shadow-xl hover:shadow-blue-600/30 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
               size="lg"
             >
               <span className="flex items-center gap-2">
@@ -271,7 +265,12 @@ export default function UserLoginForm() {
           </motion.div>
         </motion.div>
 
-        <motion.div variants={itemVariants} className="text-center text-sm">
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.6 }}
+          className="text-center text-sm"
+        >
           <p className="text-muted-foreground">
             Don't have an account?{' '}
             <a href="/signup" className="text-primary hover:text-purple-600 transition-colors font-medium hover:underline">
@@ -281,7 +280,12 @@ export default function UserLoginForm() {
         </motion.div>
 
         {/* Divider */}
-        <motion.div variants={itemVariants} className="relative">
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.7 }}
+          className="relative"
+        >
           <div className="absolute inset-0 flex items-center">
             <div className="w-full border-t border-border"></div>
           </div>
@@ -291,7 +295,11 @@ export default function UserLoginForm() {
         </motion.div>
 
         {/* Google Login Button */}
-        <motion.div variants={itemVariants}>
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.8 }}
+        >
           <GoogleLoginButton />
         </motion.div>
       </motion.form>

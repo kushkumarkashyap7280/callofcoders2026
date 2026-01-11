@@ -70,12 +70,12 @@ export default function HomePage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-orange-50 via-red-50 to-pink-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
+    <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-orange-50 via-red-50 to-pink-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
       {isLoading ? (
         <Loader2 className="w-8 h-8 animate-spin text-primary" />
       ) : (
         <div className="text-center">
-          <h1 className="text-4xl font-bold bg-gradient-to-r from-orange-600 via-red-600 to-purple-600 bg-clip-text text-transparent mb-4">
+          <h1 className="text-4xl font-bold bg-linear-to-r from-orange-600 via-red-600 to-purple-600 bg-clip-text text-transparent mb-4">
             Welcome to Call of Coders
           </h1>
           <p className="text-muted-foreground">Your coding learning platform</p>
@@ -90,7 +90,7 @@ export default function HomePage() {
             exit={{ opacity: 0, scale: 0.9, y: -20 }}
             className="fixed top-4 left-1/2 transform -translate-x-1/2 z-50 max-w-md w-full mx-4"
           >
-            <div className="bg-gradient-to-r from-orange-500 to-red-500 rounded-xl shadow-2xl p-6 text-white">
+            <div className="bg-linear-to-r from-orange-500 to-red-500 rounded-xl shadow-2xl p-6 text-white">
               <div className="flex items-start justify-between mb-3">
                 <div className="flex items-center gap-3">
                   <motion.div
