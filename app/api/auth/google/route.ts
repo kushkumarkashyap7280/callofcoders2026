@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { jwtDecode } from "jwt-decode";
 import jwt from "jsonwebtoken";
 import prisma from "@/lib/prisma";
-import { JWT_SECRET, NODE_ENV } from "@/config/env";
+import { getJwtSecret, NODE_ENV } from "@/config/env";
 
 interface GoogleJwtPayload {
   email: string;
@@ -58,7 +58,7 @@ export async function POST(request: NextRequest) {
         name: user.name,
         isAdmin: user.isAdmin,
       },
-      JWT_SECRET!,
+      getJwtSecret(),
       { expiresIn: "7d" }
     );
 

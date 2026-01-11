@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import prisma from '@/lib/prisma'
 import * as bcrypt from 'bcryptjs'
 import * as jwt from 'jsonwebtoken'
-import { JWT_SECRET, NODE_ENV } from '@/config/env'
+import { getJwtSecret, NODE_ENV } from '@/config/env'
 
 export async function POST(request: NextRequest) {
   try {
@@ -56,7 +56,7 @@ export async function POST(request: NextRequest) {
         name: user.name,
         isAdmin: user.isAdmin
       },
-      JWT_SECRET,
+      getJwtSecret(),
       { expiresIn: '7d' } // Token expires in 7 days
     )
 

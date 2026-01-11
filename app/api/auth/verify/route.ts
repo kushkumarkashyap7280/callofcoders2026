@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import * as jwt from 'jsonwebtoken'
 import { cookies } from 'next/headers'
-import { JWT_SECRET } from '@/config/env'
+import { getJwtSecret } from '@/config/env'
 
 export async function GET(request: NextRequest) {
   try {
@@ -17,7 +17,7 @@ export async function GET(request: NextRequest) {
 
     try {
       // Verify token
-      const decoded = jwt.verify(token.value, JWT_SECRET) as {
+      const decoded = jwt.verify(token.value, getJwtSecret()) as {
         email: string
         id: string
         name: string | null

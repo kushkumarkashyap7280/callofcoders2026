@@ -1,13 +1,9 @@
 import { Resend } from 'resend'
 import fs from 'fs'
 import path from 'path'
-import { RESEND_API_KEY, RESEND_FROM_EMAIL } from '@/config/env'
+import { getResendApiKey, getResendFromEmail } from '@/config/env'
 
-if (!RESEND_API_KEY) {
-  throw new Error('RESEND_API_KEY is not defined in environment variables')
-}
-
-export const resend = new Resend(RESEND_API_KEY)
+export const resend = new Resend(getResendApiKey())
 
 /**
  * Generate a 6-digit OTP code
@@ -63,7 +59,7 @@ export async function sendOtp(
     const htmlContent = getEmailTemplate(otpCode, type)
 
     const { data, error } = await resend.emails.send({
-      from: RESEND_FROM_EMAIL || 'Call of Coders <noreply@kushkumar.me>',
+      from: getResendFromEmail() || 'Call of Coders <noreply@kushkumar.me>',
       to: email,
       subject,
       html: htmlContent
