@@ -218,7 +218,7 @@ export default function UserSignupForm() {
       transition: {
         duration: 6,
         repeat: Infinity,
-        ease: "easeInOut"
+        ease: [0.42, 0, 0.58, 1]
       }
     }
   }
