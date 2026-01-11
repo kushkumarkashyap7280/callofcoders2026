@@ -95,3 +95,31 @@ model blogs {
 
   @@map("blogs")
 }
+
+enum OtpType {
+  SIGNUP
+  RESET
+}
+
+enum OtpStatus {
+  SENT
+  VERIFIED
+}
+
+model Otp {
+  email      String    @id
+  otpType    OtpType   @map("otp_type")
+  status     OtpStatus @default(SENT)
+  otpCode    String    @map("otp_code")
+  createdAt  DateTime  @default(now()) @map("created_at")
+
+  @@map("otp")
+}
+
+model OtpSession {
+  email      String   @id
+  createdAt  DateTime @default(now()) @map("created_at")
+  attempts   Int      @default(0) // Track number of attempts
+  
+  @@map("otp_session")
+}
