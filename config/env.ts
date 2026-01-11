@@ -3,23 +3,32 @@
  * Centralized access to all environment variables
  */
 
+// Helper to get required env variable
+function getRequiredEnv(key: string): string {
+  const value = process.env[key];
+  if (!value) {
+    throw new Error(`Missing required environment variable: ${key}`);
+  }
+  return value;
+}
+
 // Database
-export const DATABASE_URL = process.env.DATABASE_URL;
+export const DATABASE_URL = getRequiredEnv('DATABASE_URL');
 
 // Email (Resend)
-export const RESEND_API_KEY = process.env.RESEND_API_KEY;
-export const RESEND_FROM_EMAIL = process.env.RESEND_FROM_EMAIL;
+export const RESEND_API_KEY = getRequiredEnv('RESEND_API_KEY');
+export const RESEND_FROM_EMAIL = getRequiredEnv('RESEND_FROM_EMAIL');
 
 // JWT Secrets
-export const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET;
+export const ACCESS_TOKEN_SECRET = getRequiredEnv('ACCESS_TOKEN_SECRET');
 export const REFRESH_TOKEN_SECRET = process.env.REFRESH_TOKEN_SECRET;
-export const JWT_SECRET = process.env.JWT_SECRET || process.env.ACCESS_TOKEN_SECRET;
+export const JWT_SECRET = process.env.JWT_SECRET || ACCESS_TOKEN_SECRET;
 
 // Google OAuth
-export const NEXT_PUBLIC_GOOGLE_CLIENT_ID = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
+export const NEXT_PUBLIC_GOOGLE_CLIENT_ID = getRequiredEnv('NEXT_PUBLIC_GOOGLE_CLIENT_ID');
 
 // Node Environment
-export const NODE_ENV = process.env.NODE_ENV;
+export const NODE_ENV = process.env.NODE_ENV || 'development';
 
 /**
  * Validate required environment variables
