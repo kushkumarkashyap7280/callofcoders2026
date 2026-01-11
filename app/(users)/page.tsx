@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Loader2, AlertCircle, X } from 'lucide-react'
+import CodeRunner from '@/components/CodeRunner'
 
 export default function HomePage() {
   const router = useRouter()
@@ -74,12 +75,9 @@ export default function HomePage() {
       {isLoading ? (
         <Loader2 className="w-8 h-8 animate-spin text-primary" />
       ) : (
-        <div className="text-center">
-          <h1 className="text-4xl font-bold bg-linear-to-r from-orange-600 via-red-600 to-purple-600 bg-clip-text text-transparent mb-4">
-            Welcome to Call of Coders
-          </h1>
-          <p className="text-muted-foreground">Your coding learning platform</p>
-        </div>
+       
+          <CodeRunner  language='js' code={`// Try out some code here!\nconsole.log("Hello, Call of Coders!");`}  />
+        
       )}
 
       <AnimatePresence>
