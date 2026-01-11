@@ -85,29 +85,29 @@ export default function UserLoginForm() {
     }
   }
 
-  const floatingVariants = {
-    animate: {
-      y: [-10, 10, -10],
-      transition: {
-        duration: 6,
-        repeat: Infinity,
-        ease: [0.42, 0, 0.58, 1]
-      }
-    }
-  }
-
   return (
     <div className="w-full max-w-md mx-auto relative">
       {/* Floating background elements */}
       <motion.div
-        variants={floatingVariants}
-        animate="animate"
+        animate={{
+          y: [-10, 10, -10],
+        }}
+        transition={{
+          duration: 6,
+          repeat: Infinity,
+          repeatType: "loop",
+        }}
         className="absolute -top-20 -left-20 w-72 h-72 bg-blue-500/10 rounded-full blur-3xl pointer-events-none"
       />
       <motion.div
-        variants={floatingVariants}
-        animate="animate"
-        style={{ animationDelay: '2s' }}
+        animate={{
+          y: [10, -10, 10],
+        }}
+        transition={{
+          duration: 6,
+          repeat: Infinity,
+          repeatType: "loop",
+        }}
         className="absolute -bottom-20 -right-20 w-72 h-72 bg-purple-500/10 rounded-full blur-3xl pointer-events-none"
       />
 
