@@ -1,15 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import { jwtDecode } from "jwt-decode";
+import { OAuth2Client } from "google-auth-library";
 import jwt from "jsonwebtoken";
 import prisma from "@/lib/prisma";
-import { getJwtSecret, NODE_ENV } from "@/config/env";
-
-interface GoogleJwtPayload {
-  email: string;
-  name?: string;
-  picture?: string;
-  sub: string;
-}
+import { getJwtSecret, NODE_ENV, NEXT_PUBLIC_GOOGLE_CLIENT_ID } from "@/config/env";
 
 export async function POST(request: NextRequest) {
   try {
@@ -22,9 +15,24 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Decode the Google JWT token
-    const decoded = jwtDecode<GoogleJwtPayload>(credential);
-    const { email, name, picture } = decoded;
+    // Verify the Google JWT token signature
+    const client = new OAuth2Client(NEXT_PUBLIC_GOOGLE_CLIENT_ID);
+    
+    const ticket = await client.verifyIdToken({
+      idToken: credential,
+      audience: NEXT_PUBLIC_GOOGLE_CLIENT_ID,
+    });
+    
+    const payload = ticket.getPayload();
+    
+    if (!payload) {
+      return NextResponse.json(
+        { error: "Invalid token payload" },
+        { status: 400 }
+      );
+    }
+    
+    const { email, name, picture, sub } = payload; // ⚠️ Get sub (Google ID)
 
     if (!email) {
       return NextResponse.json(
@@ -33,9 +41,14 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Check if user already exists
-    let user = await prisma.user.findUnique({
-      where: { email },
+    // Check if user exists by googleId OR email
+    let user = await prisma.user.findFirst({
+      where: {
+        OR: [
+          { googleId: sub },
+          { email: email },
+        ],
+      },
     });
 
     // If user doesn't exist, create a new one
@@ -44,9 +57,16 @@ export async function POST(request: NextRequest) {
         data: {
           email,
           name: name || email.split("@")[0],
+          googleId: sub, // ⚠️ Store Google ID
           passwordHash: "", // Empty password for Google OAuth users
           isAdmin: false,
         },
+      });
+    } else if (!user.googleId) {
+      // User exists with email but no googleId - link the Google account
+      user = await prisma.user.update({
+        where: { id: user.id },
+        data: { googleId: sub },
       });
     }
 
