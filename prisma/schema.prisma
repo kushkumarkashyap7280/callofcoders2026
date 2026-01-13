@@ -123,3 +123,37 @@ model OtpSession {
   
   @@map("otp_session")
 }
+
+
+// schema.prisma
+
+model Project {
+  id              Int      @id @default(autoincrement()) // project_id
+  title           String
+  desc            String
+  createdAt       DateTime @default(now()) // created_at
+  technologies    String[] // Array of strings (e.g., ["React", "Node"])
+  imgUrl          String?  // img_url (Optional)
+  projectLiveLink String?  // project_live_link (Optional)
+  sourceCodeLink  String?  // source_code_link (Optional)
+  isPublished     Boolean  @default(false)
+  sequenceNo      Int      @default(0) // sequence_no
+
+  @@map("projects")
+}
+
+model Education {
+  id                  Int      @id @default(autoincrement()) // edu_id
+  title               String   // Degree or Certificate name
+  desc                String?
+  createdAt           DateTime @default(now()) // created_at
+  cgpa                String?  // String allows "8.5/10" or "3.8" formats
+  institutionLogoLink String?  // institution_logo_link
+  institutionName     String   // institution_name
+  institutionLink     String?  // institution_link
+  fromTo              String   // from_to (e.g., "2020-2024")
+  isPublished         Boolean  @default(false)
+  sequenceNo          Int      @default(0) // sequence_no
+
+  @@map("education")
+}

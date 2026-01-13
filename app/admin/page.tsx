@@ -25,19 +25,25 @@ export default function AdminDashboard() {
         const response = await fetch('/api/auth/verify')
         const data = await response.json()
 
+        console.log('Admin page - verify response:', data) // Debug log
+
         if (!response.ok || !data.isAuthenticated) {
+          console.log('Not authenticated, redirecting to login')
           router.push('/login')
           return
         }
 
         // Check if user is admin
         if (!data.user.isAdmin) {
+          console.log('User is not admin, redirecting to user page')
           router.push(`/${data.user.id}`)
           return
         }
 
+        console.log('User is admin, setting admin data')
         setAdmin(data.user)
       } catch (err) {
+        console.error('Error fetching admin data:', err)
         setError('Failed to load admin data')
       } finally {
         setLoading(false)
