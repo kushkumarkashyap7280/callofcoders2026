@@ -7,5 +7,9 @@ export const metadata: Metadata = {
 };
 
 export default function LoginPage() {
-  return <UserLoginForm />;
+  return (
+    <div className="container mx-auto max-w-7xl flex items-center justify-center">
+      <UserLoginForm />
+    </div>
+  );
 }

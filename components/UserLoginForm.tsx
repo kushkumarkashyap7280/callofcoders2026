@@ -98,14 +98,25 @@ export default function UserLoginForm() {
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
-            className="inline-flex items-center justify-center w-16 h-16 mb-4 rounded-2xl bg-linear-to-br from-blue-600 to-purple-600 shadow-lg shadow-blue-600/25"
+            className="inline-flex items-center justify-center w-20 h-20 mb-6 rounded-3xl bg-linear-to-r from-blue-600 via-purple-600 to-pink-600 shadow-2xl shadow-purple-500/40 relative"
           >
-            <LogIn className="w-8 h-8 text-white" />
+            <motion.div 
+              className="absolute inset-0 rounded-3xl bg-linear-to-r from-blue-400 via-purple-400 to-pink-400 opacity-0"
+              animate={{ 
+                opacity: [0, 0.5, 0],
+                scale: [1, 1.2, 1],
+              }}
+              transition={{
+                duration: 2,
+                repeat: Infinity,
+              }}
+            />
+            <LogIn className="w-9 h-9 text-white relative z-10" />
           </motion.div>
-          <h1 className="text-4xl font-bold bg-linear-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent mb-2">
+          <h1 className="text-5xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent mb-3">
             Welcome Back
           </h1>
-          <p className="text-muted-foreground">Sign in to continue your learning</p>
+          <p className="text-zinc-600 dark:text-zinc-400 text-sm">Sign in to continue your coding journey</p>
         </motion.div>
 
         <motion.form
@@ -113,15 +124,16 @@ export default function UserLoginForm() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.2 }}
           onSubmit={handleSubmit}
-          className="space-y-5 bg-card/50 backdrop-blur-xl p-8 rounded-2xl border border-border/50 shadow-2xl shadow-black/10 dark:shadow-black/50"
+          className="space-y-5 bg-white/70 dark:bg-zinc-900/70 backdrop-blur-xl p-8 rounded-3xl border border-white/10 dark:border-zinc-800/50 shadow-2xl shadow-black/5 dark:shadow-black/20"
         >
         {/* Error Message */}
         {error && (
           <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="p-3 rounded-lg bg-red-500/10 border border-red-500/50 text-red-500 text-sm"
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="p-4 rounded-xl bg-red-500/10 dark:bg-red-500/20 border border-red-500/50 text-red-600 dark:text-red-400 text-sm flex items-center gap-2"
           >
+            <div className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" />
             {error}
           </motion.div>
         )}
@@ -132,14 +144,14 @@ export default function UserLoginForm() {
           transition={{ duration: 0.5, delay: 0.3 }}
           className="space-y-2"
         >
-          <Label htmlFor="email" className="flex items-center gap-2 text-sm font-medium">
+          <Label htmlFor="email" className="flex items-center gap-2 text-sm font-semibold text-zinc-700 dark:text-zinc-300">
             <motion.div
               animate={focusedField === 'email' ? { scale: 1.2, rotate: 360 } : { scale: 1, rotate: 0 }}
               transition={{ duration: 0.3 }}
             >
-              <Mail className="w-4 h-4 text-primary" />
+              <Mail className="w-4 h-4 text-purple-600 dark:text-purple-400" />
             </motion.div>
-            Email
+            Email Address
           </Label>
           <motion.div
             whileFocus={{ scale: 1.01 }}
@@ -155,7 +167,7 @@ export default function UserLoginForm() {
               onFocus={() => setFocusedField('email')}
               onBlur={() => setFocusedField(null)}
               required
-              className="h-12 transition-all border-2 focus:border-primary/50 focus:shadow-lg focus:shadow-primary/10"
+              className="h-12 bg-white dark:bg-zinc-800 border-2 border-zinc-200 dark:border-zinc-700 focus:border-purple-500 dark:focus:border-purple-500 focus:ring-4 focus:ring-purple-500/10 transition-all rounded-xl"
             />
           </motion.div>
         </motion.div>
@@ -167,19 +179,19 @@ export default function UserLoginForm() {
           className="space-y-2"
         >
           <div className="flex items-center justify-between">
-            <Label htmlFor="password" className="flex items-center gap-2 text-sm font-medium">
+            <Label htmlFor="password" className="flex items-center gap-2 text-sm font-semibold text-zinc-700 dark:text-zinc-300">
               <motion.div
                 animate={focusedField === 'password' ? { scale: 1.2, rotate: 360 } : { scale: 1, rotate: 0 }}
                 transition={{ duration: 0.3 }}
               >
-                <Lock className="w-4 h-4 text-primary" />
+                <Lock className="w-4 h-4 text-purple-600 dark:text-purple-400" />
               </motion.div>
               Password
             </Label>
             <motion.a
               href="/forgot-password"
               whileHover={{ scale: 1.05 }}
-              className="text-xs text-primary hover:text-purple-600 transition-colors font-medium"
+              className="text-xs text-purple-600 dark:text-purple-400 hover:text-pink-600 dark:hover:text-pink-400 transition-colors font-semibold"
             >
               Forgot password?
             </motion.a>
@@ -199,14 +211,14 @@ export default function UserLoginForm() {
               onFocus={() => setFocusedField('password')}
               onBlur={() => setFocusedField(null)}
               required
-              className="h-12 transition-all border-2 focus:border-primary/50 focus:shadow-lg focus:shadow-primary/10 pr-12"
+              className="h-12 bg-white dark:bg-zinc-800 border-2 border-zinc-200 dark:border-zinc-700 focus:border-purple-500 dark:focus:border-purple-500 focus:ring-4 focus:ring-purple-500/10 transition-all rounded-xl pr-12"
             />
             <motion.button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-primary transition-colors p-1"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-purple-600 dark:hover:text-purple-400 transition-colors p-1.5 rounded-lg hover:bg-purple-100 dark:hover:bg-purple-900/20"
             >
               <AnimatePresence mode="wait" initial={false}>
                 <motion.div
@@ -216,7 +228,7 @@ export default function UserLoginForm() {
                   exit={{ opacity: 0, rotate: 180 }}
                   transition={{ duration: 0.2 }}
                 >
-                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                 </motion.div>
               </AnimatePresence>
             </motion.button>
@@ -236,13 +248,16 @@ export default function UserLoginForm() {
             <Button
               type="submit"
               disabled={loading}
-              className="w-full h-12 group bg-linear-to-r from-blue-600 via-purple-600 to-pink-600 hover:shadow-xl hover:shadow-blue-600/30 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full h-13 group relative overflow-hidden bg-linear-to-r from-blue-600 via-purple-600 to-pink-600 hover:from-blue-700 hover:via-purple-700 hover:to-pink-700 shadow-xl shadow-purple-500/30 hover:shadow-2xl hover:shadow-purple-500/40 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold text-base rounded-xl"
               size="lg"
             >
-              <span className="flex items-center gap-2">
+              <motion.div 
+                className="absolute inset-0 bg-linear-to-r from-pink-600 via-purple-600 to-blue-600 opacity-0 group-hover:opacity-100 transition-opacity"
+              />
+              <span className="flex items-center gap-2 relative z-10">
                 {loading ? (
                   <>
-                    <Loader2 className="w-4 h-4 animate-spin" />
+                    <Loader2 className="w-5 h-5 animate-spin" />
                     Signing in...
                   </>
                 ) : (
@@ -252,7 +267,7 @@ export default function UserLoginForm() {
                       animate={{ x: [0, 5, 0] }}
                       transition={{ repeat: Infinity, duration: 1.5, ease: "easeInOut" }}
                     >
-                      <ArrowRight className="w-4 h-4" />
+                      <ArrowRight className="w-5 h-5" />
                     </motion.div>
                   </>
                 )}
@@ -267,9 +282,9 @@ export default function UserLoginForm() {
           transition={{ duration: 0.5, delay: 0.6 }}
           className="text-center text-sm"
         >
-          <p className="text-muted-foreground">
+          <p className="text-zinc-600 dark:text-zinc-400">
             Don't have an account?{' '}
-            <a href="/signup" className="text-primary hover:text-purple-600 transition-colors font-medium hover:underline">
+            <a href="/signup" className="text-purple-600 dark:text-purple-400 hover:text-pink-600 dark:hover:text-pink-400 transition-colors font-semibold hover:underline">
               Sign up
             </a>
           </p>
@@ -283,10 +298,10 @@ export default function UserLoginForm() {
           className="relative"
         >
           <div className="absolute inset-0 flex items-center">
-            <div className="w-full border-t border-border"></div>
+            <div className="w-full border-t border-zinc-200 dark:border-zinc-700"></div>
           </div>
           <div className="relative flex justify-center text-xs uppercase">
-            <span className="bg-card px-2 text-muted-foreground">Or continue with</span>
+            <span className="bg-white dark:bg-zinc-900 px-3 text-zinc-500 dark:text-zinc-400 font-medium">Or continue with</span>
           </div>
         </motion.div>
 
