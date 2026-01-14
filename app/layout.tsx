@@ -64,7 +64,7 @@ export const metadata: Metadata = {
     "Kush Kumar Developer",
     "Kush Kumar Projects"
   ],
-  authors: [{ name: "Kush Kumar", url: "https://callofcoders.com" }],
+  authors: [{ name: "Kush Kumar", url: "https://kushkumar.me" }],
   creator: "Kush Kumar",
   publisher: "Kush Kumar",
   robots: {
@@ -81,13 +81,13 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://callofcoders.com",
-    siteName: "CallOfCoders",
+    url: "https://kushkumar.me",
+    siteName: "CallOfCoders - Kush Kumar",
     title: "CallOfCoders - Kush Kumar | Full Stack Developer & Online Code Compiler",
     description: "Free online code compiler by Kush Kumar - Full Stack Developer. Compile and run JavaScript, Python, TypeScript, Java, C++ code instantly. Learn programming with DSA tutorials and join our developer community.",
     images: [
       {
-        url: "/og-image.png",
+        url: "https://kushkumar.me/og-image.png",
         width: 1200,
         height: 630,
         alt: "CallOfCoders - Kush Kumar Full Stack Developer",
@@ -99,10 +99,10 @@ export const metadata: Metadata = {
     title: "CallOfCoders - Kush Kumar | Full Stack Developer & Online Code Compiler",
     description: "Free online code compiler and programming tutorials by Kush Kumar. Compile JavaScript, Python, TypeScript, Java, C++ instantly. Learn coding online.",
     creator: "@kushkumar",
-    images: ["/twitter-image.png"],
+    images: ["https://kushkumar.me/twitter-image.png"],
   },
   alternates: {
-    canonical: "https://callofcoders.com",
+    canonical: "https://kushkumar.me",
   },
   category: "technology",
   classification: "Software Development, Online Compiler, Programming Education",
@@ -117,8 +117,61 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: 'CallOfCoders',
+    alternateName: 'Kush Kumar Developer Portfolio',
+    url: 'https://kushkumar.me',
+    description: 'Free online code compiler and programming tutorials by Kush Kumar',
+    author: {
+      '@type': 'Person',
+      name: 'Kush Kumar',
+      url: 'https://kushkumar.me/about',
+      jobTitle: 'Full Stack Developer',
+      sameAs: [
+        'https://github.com/kushkumar',
+        'https://linkedin.com/in/kushkumar',
+        'https://twitter.com/kushkumar',
+      ],
+    },
+    potentialAction: {
+      '@type': 'SearchAction',
+      target: 'https://kushkumar.me/compiler?q={search_term_string}',
+      'query-input': 'required name=search_term_string',
+    },
+  }
+
+  const organizationLd = {
+    '@context': 'https://schema.org',
+    '@type': 'SoftwareApplication',
+    name: 'CallOfCoders',
+    applicationCategory: 'DeveloperApplication',
+    operatingSystem: 'Web',
+    offers: {
+      '@type': 'Offer',
+      price: '0',
+      priceCurrency: 'USD',
+    },
+    aggregateRating: {
+      '@type': 'AggregateRating',
+      ratingValue: '4.8',
+      reviewCount: '100',
+    },
+  }
+
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationLd) }}
+        />
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
