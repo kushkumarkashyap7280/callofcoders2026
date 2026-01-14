@@ -1,12 +1,11 @@
-import UserLoginForm from '@/components/UserLoginForm'
-import UserSignupForm from '@/components/UserSignupForm'
-import React from 'react'
+import type { Metadata } from "next";
+import UserSignupForm from '@/components/UserSignupForm';
 
-function page() {
+export const metadata: Metadata = {
+  title: "Sign Up - CallOfCoders | Join Developer Community",
+  description: "Create your free CallOfCoders account. Access online code compiler, learning resources, and join a community of developers learning JavaScript, Python, TypeScript, React, and more.",
+};
 
-  return (
- <UserSignupForm />
-  )
+export default function SignupPage() {
+  return <UserSignupForm />;
 }
-
-export default page

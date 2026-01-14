@@ -1,6 +1,9 @@
+import type { Metadata } from "next";
 
-
-
+export const metadata: Metadata = {
+  title: "Admin Dashboard - CallOfCoders | Platform Management",
+  description: "Admin dashboard for managing CallOfCoders platform, users, and content.",
+};
 
 export default function AdminLayout({
   children,
