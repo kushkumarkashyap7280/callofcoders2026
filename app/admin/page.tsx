@@ -1,7 +1,43 @@
+'use client'
+
+import React from 'react'
+import { useRouter } from 'next/navigation'
+import { Button } from '@/components/ui/button'
+
 export default function AdminPage() {
+  const router = useRouter()
+  const [isLoggingOut, setIsLoggingOut] = React.useState(false)
+
+  const handleLogout = async () => {
+    try {
+      setIsLoggingOut(true)
+      const response = await fetch('/api/auth/logout', {
+        method: 'POST',
+      })
+
+      if (response.ok) {
+        router.push('/')
+        router.refresh()
+      }
+    } catch (error) {
+      console.error('Logout failed:', error)
+    } finally {
+      setIsLoggingOut(false)
+    }
+  }
+
   return (
     <div className="space-y-6">
-      <h1 className="text-3xl font-bold">Admin Dashboard</h1>
+      <div className="flex justify-between items-center">
+        <h1 className="text-3xl font-bold">Admin Dashboard</h1>
+        <Button 
+          onClick={handleLogout} 
+          disabled={isLoggingOut}
+          variant="outline"
+        >
+          {isLoggingOut ? 'Logging out...' : 'Logout'}
+        </Button>
+      </div>
       
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         <div className="bg-white dark:bg-zinc-800 p-6 rounded-lg shadow">
