@@ -18,8 +18,8 @@ export default function AdminLogin() {
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      // Ctrl + Shift + A to toggle admin login
-      if (e.ctrlKey && e.shiftKey && e.key === 'A') {
+      // Ctrl + Shift + K to toggle admin login
+      if (e.ctrlKey && e.shiftKey && e.key === 'K') {
         e.preventDefault()
         setIsOpen(prev => !prev)
       }
@@ -68,7 +68,7 @@ export default function AdminLogin() {
 
       // Redirect to admin page
       console.log('AdminLogin - Redirecting to /admin')
-      window.location.href = '/admin'
+      window.location.reload()
     } catch (err) {
       setError('An error occurred during login')
       setLoading(false)
