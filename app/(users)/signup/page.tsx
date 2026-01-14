@@ -1,16 +1,11 @@
-import React from 'react'
+import UserLoginForm from '@/components/UserLoginForm'
 import UserSignupForm from '@/components/UserSignupForm'
-
-export const metadata = {
-  title: 'Sign Up',
-  description: 'Create a new account',
-};
+import React from 'react'
 
 function page() {
+
   return (
-    <div className="min-h-screen flex items-center justify-center p-4">
-      <UserSignupForm />
-    </div>
+ <UserSignupForm />
   )
 }
 

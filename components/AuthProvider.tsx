@@ -1,46 +1,94 @@
-"use client"
+'use client'
 
-import { useEffect, useState } from 'react'
-import { usePathname, useRouter } from 'next/navigation'
-import { useAuth } from '@/hooks/useAuth'
-import AuthNotification from './AuthNotification'
+import { useRouter } from "next/navigation";
+import { createContext,useContext, useEffect, useState } from "react"
 
-export default function AuthProvider({ children }: { children: React.ReactNode }) {
-  const { isAuthenticated, user, isLoading } = useAuth()
-  const [showNotification, setShowNotification] = useState(false)
-  const pathname = usePathname()
-  const router = useRouter()
+interface AuthState {
+  loading: boolean;
+  isAuthenticated: boolean;
+  user: any;
+  error: string | null;
+  isAdmin: boolean;
+}
+
+const AuthContex = createContext<AuthState | null>(null);
+
+export const useAuth = () => useContext(AuthContex);
+
+
+
+
+function AuthProvider({ children }: { children: React.ReactNode }) {
+
+   const router = useRouter();
+   const [authstate , setAuthState] = useState<AuthState>({
+    loading: true,
+    isAuthenticated: false,
+    user: null,
+    error: null,
+    isAdmin: false,
+  });
+    
+  
+
+   useEffect(() => {
+  fetch('/api/auth/verify', {
+    method: 'GET',
+    credentials: 'include', // Important: sends cookies
+  })
+    .then((res) => res.json())
+    .then((data) => {
+      if (data.success && data.user) {
+        setAuthState({
+          loading: false,
+          isAuthenticated: true,
+          user: data.user,
+          error: null,
+          isAdmin: data.user.isAdmin || false,
+        })
+      } else {
+        setAuthState({
+          loading: false,
+          isAuthenticated: false,
+          user: null,
+          error: null,
+          isAdmin: false,
+        })
+      }
+    })
+    .catch(() => {
+      setAuthState({
+        loading: false,
+        isAuthenticated: false,
+        user: null,
+        error: 'Failed to verify authentication',
+        isAdmin: false,
+      })
+    })
+}, []) // Empty dependency array = runs once on mount
 
   useEffect(() => {
-    // Don't do anything while loading
-    if (isLoading) return
+    console.log("Auth State Updated:", authstate);
+    if (authstate.isAuthenticated) {
+      console.log("Authenticated User:", authstate.user);
 
-    // Redirect authenticated users away from login/signup pages
-    if (isAuthenticated && user) {
-      if (pathname === '/login' || pathname === '/signup') {
-        // Redirect based on role
-        if (user.isAdmin) {
-          router.push('/admin')
-        } else {
-          router.push(`/${user.id}`)
-        }
-        return
+      if(authstate.isAdmin) {
+        console.log("User has admin privileges.");
+        router.push('/admin');
+      }else{
+        console.log("User is not an admin.");
+        router.push('/profile');
       }
-      
-      // Show notification on other pages
-      setShowNotification(true)
     }
-  }, [isAuthenticated, user, pathname, router, isLoading])
-
+  }, [authstate]);
+    
   return (
-    <>
+    <AuthContex.Provider value={authstate}>
       {children}
-      {showNotification && user && !pathname.includes('/login') && !pathname.includes('/signup') && (
-        <AuthNotification 
-          user={user} 
-          onClose={() => setShowNotification(false)} 
-        />
-      )}
-    </>
+    </AuthContex.Provider>
+    
   )
 }
+
+
+export default AuthProvider

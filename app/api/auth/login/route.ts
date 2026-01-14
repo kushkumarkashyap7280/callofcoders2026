@@ -48,6 +48,12 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    // Log for debugging
+    console.log('Login - User from DB:', { 
+      email: user.email, 
+      isAdmin: user.isAdmin 
+    })
+
     // Create JWT token with user email
     const token = jwt.sign(
       { 
@@ -59,6 +65,11 @@ export async function POST(request: NextRequest) {
       getJwtSecret(),
       { expiresIn: '7d' } // Token expires in 7 days
     )
+
+    console.log('Login - JWT payload:', { 
+      email: user.email, 
+      isAdmin: user.isAdmin 
+    })
 
     // Create response with user data
     const response = NextResponse.json({

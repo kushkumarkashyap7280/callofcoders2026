@@ -22,13 +22,7 @@ export default function GoogleLoginButton() {
 
       const data = await response.json();
 
-      if (response.ok) {
-        // Redirect to user dashboard
-        window.location.href = `/${data.user.id}`;
-      } else {
-        console.error("Google login failed:", data.error);
-        alert(data.error || "Google login failed");
-      }
+     
     } catch (error) {
       console.error("Error during Google login:", error);
       alert("An error occurred during Google login");

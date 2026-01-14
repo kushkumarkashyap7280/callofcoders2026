@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import * as jwt from 'jsonwebtoken'
 import { cookies } from 'next/headers'
 import { getJwtSecret } from '@/config/env'
+import prisma from '@/lib/prisma'
 
 export async function GET(request: NextRequest) {
   try {
@@ -24,14 +25,28 @@ export async function GET(request: NextRequest) {
         isAdmin: boolean
       }
 
+    const user = await  prisma.user.findUnique({
+        where: {
+          id: decoded.id
+        }
+      })
+      if (!user) {
+        return NextResponse.json(
+          { success: false, isAuthenticated: false, message: 'User not found' },
+          { status: 404 }
+        )
+      }
+
+
+
       return NextResponse.json({
         success: true,
         isAuthenticated: true,
         user: {
-          id: decoded.id,
-          email: decoded.email,
-          name: decoded.name,
-          isAdmin: decoded.isAdmin
+          id: user.id,
+          email: user.email,
+          name: user.name,
+          isAdmin: user.isAdmin
         }
       })
     } catch (jwtError) {
