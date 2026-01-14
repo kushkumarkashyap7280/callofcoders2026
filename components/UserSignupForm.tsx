@@ -245,28 +245,86 @@ export default function UserSignupForm() {
         transition={{ duration: 0.5 }}
         className="relative"
       >
-        {/* Progress Indicator */}
+        {/* Progress Indicator with Numbers */}
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.1 }}
-          className="flex justify-center gap-2 mb-6"
+          className="flex justify-center items-center gap-3 mb-8"
         >
-          {[1, 2, 3].map((step) => (
-            <motion.div
-              key={step}
-              className={`h-1.5 rounded-full transition-all ${
-                step === getStageNumber() 
-                  ? 'w-12 bg-linear-to-r from-primary to-purple-600' 
-                  : step < getStageNumber()
-                  ? 'w-8 bg-primary/50'
-                  : 'w-8 bg-muted'
-              }`}
-              animate={{
-                scale: step === getStageNumber() ? 1.1 : 1
-              }}
-            />
-          ))}
+          {[1, 2, 3].map((step) => {
+            const isActive = step === getStageNumber()
+            const isCompleted = step < getStageNumber()
+            
+            return (
+              <React.Fragment key={step}>
+                <motion.div
+                  className="flex flex-col items-center gap-2"
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ delay: step * 0.1 }}
+                >
+                  <motion.div
+                    className={`relative flex items-center justify-center w-10 h-10 rounded-full font-semibold text-sm transition-all ${
+                      isActive 
+                        ? 'bg-linear-to-r from-blue-600 via-purple-600 to-pink-600 text-white shadow-lg shadow-purple-500/50 scale-110' 
+                        : isCompleted
+                        ? 'bg-linear-to-r from-blue-500/80 to-purple-500/80 text-white'
+                        : 'bg-zinc-100 dark:bg-zinc-800 text-zinc-400 dark:text-zinc-600'
+                    }`}
+                    animate={{
+                      scale: isActive ? [1, 1.1, 1] : 1,
+                    }}
+                    transition={{
+                      duration: 2,
+                      repeat: isActive ? Infinity : 0,
+                      repeatType: "reverse"
+                    }}
+                  >
+                    {isCompleted ? (
+                      <Check className="w-5 h-5" />
+                    ) : (
+                      step
+                    )}
+                    {isActive && (
+                      <motion.div
+                        className="absolute inset-0 rounded-full bg-linear-to-r from-blue-600 via-purple-600 to-pink-600 opacity-50"
+                        animate={{
+                          scale: [1, 1.5],
+                          opacity: [0.5, 0],
+                        }}
+                        transition={{
+                          duration: 2,
+                          repeat: Infinity,
+                        }}
+                      />
+                    )}
+                  </motion.div>
+                  <span className={`text-[10px] font-medium ${
+                    isActive 
+                      ? 'text-purple-600 dark:text-purple-400' 
+                      : isCompleted 
+                      ? 'text-zinc-600 dark:text-zinc-400'
+                      : 'text-zinc-400 dark:text-zinc-600'
+                  }`}>
+                    {step === 1 ? 'Email' : step === 2 ? 'Verify' : 'Complete'}
+                  </span>
+                </motion.div>
+                {step < 3 && (
+                  <motion.div
+                    className={`w-12 h-0.5 rounded-full transition-all ${
+                      step < getStageNumber() 
+                        ? 'bg-linear-to-r from-blue-500 to-purple-500' 
+                        : 'bg-zinc-200 dark:bg-zinc-700'
+                    }`}
+                    initial={{ scaleX: 0 }}
+                    animate={{ scaleX: 1 }}
+                    transition={{ delay: step * 0.1 + 0.2 }}
+                  />
+                )}
+              </React.Fragment>
+            )
+          })}
         </motion.div>
 
         <motion.div
@@ -278,15 +336,26 @@ export default function UserSignupForm() {
           <motion.div
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
-            transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
-            className="inline-flex items-center justify-center w-16 h-16 mb-4 rounded-2xl bg-linear-to-br from-primary to-purple-600 shadow-lg shadow-primary/25"
+            transition={{ delay: 0.3, type: "spring", stiffness: 200 }}
+            className="inline-flex items-center justify-center w-20 h-20 mb-4 rounded-3xl bg-linear-to-r from-blue-600 via-purple-600 to-pink-600 shadow-2xl shadow-purple-500/40 relative"
           >
+            <motion.div 
+              className="absolute inset-0 rounded-3xl bg-linear-to-r from-blue-400 via-purple-400 to-pink-400 opacity-0"
+              animate={{ 
+                opacity: [0, 0.5, 0],
+                scale: [1, 1.2, 1],
+              }}
+              transition={{
+                duration: 2,
+                repeat: Infinity,
+              }}
+            />
             {stage === 'verify' ? (
-              <Mail className="w-8 h-8 text-white" />
+              <Mail className="w-9 h-9 text-white relative z-10" />
             ) : stage === 'complete' ? (
-              <Check className="w-8 h-8 text-white" />
+              <User className="w-9 h-9 text-white relative z-10" />
             ) : (
-              <Sparkles className="w-8 h-8 text-white" />
+              <Sparkles className="w-9 h-9 text-white relative z-10" />
             )}
           </motion.div>
           <AnimatePresence mode="wait">
@@ -297,15 +366,15 @@ export default function UserSignupForm() {
               exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.3 }}
             >
-              <h1 className="text-4xl font-bold bg-linear-to-r from-primary via-purple-600 to-pink-600 bg-clip-text text-transparent mb-2">
+              <h1 className="text-4xl font-bold bg-linear-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent mb-3">
                 {getStageTitle()}
               </h1>
-              <p className="text-muted-foreground">{getStageDescription()}</p>
+              <p className="text-zinc-600 dark:text-zinc-400 text-sm">{getStageDescription()}</p>
             </motion.div>
           </AnimatePresence>
         </motion.div>
 
-        <div className="bg-card/50 backdrop-blur-xl p-8 rounded-2xl border border-border/50 shadow-2xl shadow-black/10 dark:shadow-black/50 overflow-hidden">
+        <div className="bg-white/70 dark:bg-zinc-900/70 backdrop-blur-xl p-8 rounded-3xl border border-white/10 dark:border-zinc-800/50 shadow-2xl shadow-black/5 dark:shadow-black/20 overflow-hidden">
           <AnimatePresence mode="wait" custom={getStageNumber()}>
             {/* Error Message */}
             {error && (

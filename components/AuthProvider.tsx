@@ -1,8 +1,7 @@
 'use client'
 
 import { useRouter } from "next/navigation";
-import { createContext,useContext, useEffect, useState } from "react"
-import Welcome from "./Welcome";
+import { createContext,useContext, useEffect, useState } from "react";
 
 interface AuthState {
   loading: boolean;
@@ -84,10 +83,6 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }, [authstate]);
 
-  if(authstate.loading){
-    return  <Welcome />;
-  }
-    
   return (
     <AuthContex.Provider value={{authState: authstate, setAuthState}}>
       {children}
