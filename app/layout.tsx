@@ -19,13 +19,19 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "CallOfCoders - Kush Kumar | Full Stack Developer Portfolio & Online Code Compiler",
-    template: "%s | CallOfCoders - Kush Kumar"
+    default: "Kush Kumar | Full Stack Developer & Software Engineer Portfolio",
+    template: "%s | Kush Kumar"
   },
-  description: "CallOfCoders by Kush Kumar - Full Stack Developer & Software Engineer specializing in JavaScript, TypeScript, React, Next.js, Node.js, Python, Java, C++. Free online code compiler with instant execution, DSA tutorials, web development courses, and programming resources. Build, compile, test, and learn coding online. Join thousands of developers in the coding community.",
+  description: "Kush Kumar - Full Stack Developer & Software Engineer specializing in JavaScript, TypeScript, React, Next.js, Node.js, Python, Java, C++. Free online code compiler with instant execution, DSA tutorials, web development courses, and programming resources. Build, compile, test, and learn coding online.",
   keywords: [
     "Kush Kumar",
-    "CallOfCoders", 
+    "Kush Kumar Developer",
+    "Kush Kumar Portfolio",
+    "Kush Kumar Full Stack Developer",
+    "Kush Kumar Software Engineer",
+    "Kush Kumar Projects",
+    "Kush Kumar GitHub",
+    "Kush Kumar Web Developer",
     "Full Stack Developer",
     "Software Engineer",
     "Online Compiler",
@@ -60,9 +66,6 @@ export const metadata: Metadata = {
     "Developer Tools",
     "Software Development",
     "Tech Portfolio",
-    "Kush Kumar Portfolio",
-    "Kush Kumar Developer",
-    "Kush Kumar Projects"
   ],
   authors: [{ name: "Kush Kumar", url: "https://kushkumar.me" }],
   creator: "Kush Kumar",
@@ -82,22 +85,22 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_US",
     url: "https://kushkumar.me",
-    siteName: "CallOfCoders - Kush Kumar",
-    title: "CallOfCoders - Kush Kumar | Full Stack Developer & Online Code Compiler",
-    description: "Free online code compiler by Kush Kumar - Full Stack Developer. Compile and run JavaScript, Python, TypeScript, Java, C++ code instantly. Learn programming with DSA tutorials and join our developer community.",
+    siteName: "Kush Kumar",
+    title: "Kush Kumar | Full Stack Developer & Software Engineer",
+    description: "Kush Kumar - Full Stack Developer & Software Engineer. Free online code compiler for JavaScript, Python, TypeScript, Java, C++. Programming tutorials and developer resources.",
     images: [
       {
         url: "https://kushkumar.me/og-image.png",
         width: 1200,
         height: 630,
-        alt: "CallOfCoders - Kush Kumar Full Stack Developer",
+        alt: "Kush Kumar - Full Stack Developer & Software Engineer",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "CallOfCoders - Kush Kumar | Full Stack Developer & Online Code Compiler",
-    description: "Free online code compiler and programming tutorials by Kush Kumar. Compile JavaScript, Python, TypeScript, Java, C++ instantly. Learn coding online.",
+    title: "Kush Kumar | Full Stack Developer & Software Engineer",
+    description: "Kush Kumar - Full Stack Developer. Free online code compiler and programming tutorials. JavaScript, Python, TypeScript, Java, C++.",
     creator: "@kushkumar",
     images: ["https://kushkumar.me/twitter-image.png"],
   },
@@ -106,7 +109,7 @@ export const metadata: Metadata = {
   },
   category: "technology",
   classification: "Software Development, Online Compiler, Programming Education",
-  applicationName: "CallOfCoders",
+  applicationName: "Kush Kumar Developer Platform",
   verification: {
     google: "google-site-verification-code",
   },
@@ -120,10 +123,10 @@ export default function RootLayout({
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'WebSite',
-    name: 'CallOfCoders',
+    name: 'Kush Kumar',
     alternateName: 'Kush Kumar Developer Portfolio',
     url: 'https://kushkumar.me',
-    description: 'Free online code compiler and programming tutorials by Kush Kumar',
+    description: 'Full Stack Developer & Software Engineer - Kush Kumar',
     author: {
       '@type': 'Person',
       name: 'Kush Kumar',
@@ -145,7 +148,7 @@ export default function RootLayout({
   const organizationLd = {
     '@context': 'https://schema.org',
     '@type': 'SoftwareApplication',
-    name: 'CallOfCoders',
+    name: 'Kush Kumar Developer Platform',
     applicationCategory: 'DeveloperApplication',
     operatingSystem: 'Web',
     offers: {
