@@ -4,9 +4,11 @@ import { GoogleLogin, GoogleOAuthProvider } from "@react-oauth/google";
 import { useState } from "react";
 import { NEXT_PUBLIC_GOOGLE_CLIENT_ID } from "@/config/env";
 
+
 export default function GoogleLoginButton() {
   const [loading, setLoading] = useState(false);
-
+   
+  
   const handleGoogleSuccess = async (credentialResponse: any) => {
     setLoading(true);
     try {
@@ -22,13 +24,18 @@ export default function GoogleLoginButton() {
 
       const data = await response.json();
 
-     
+      if (response.ok) {
+        // Successfully logged in
+        window.location.reload();
+      }
     } catch (error) {
       console.error("Error during Google login:", error);
       alert("An error occurred during Google login");
     } finally {
       setLoading(false);
     }
+
+
   };
 
   const handleGoogleError = () => {

@@ -11,7 +11,7 @@ interface AuthState {
   isAdmin: boolean;
 }
 
-const AuthContex = createContext<AuthState | null>(null);
+const AuthContex = createContext<{authState: AuthState, setAuthState: React.Dispatch<React.SetStateAction<AuthState>>} | null>(null);
 
 export const useAuth = () => useContext(AuthContex);
 
@@ -46,6 +46,7 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
           error: null,
           isAdmin: data.user.isAdmin || false,
         })
+        
       } else {
         setAuthState({
           loading: false,
@@ -83,7 +84,7 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
   }, [authstate]);
     
   return (
-    <AuthContex.Provider value={authstate}>
+    <AuthContex.Provider value={{authState: authstate, setAuthState}}>
       {children}
     </AuthContex.Provider>
     
