@@ -41,12 +41,8 @@ export default function UserLoginForm() {
         return
       }
 
-      // Redirect based on user role
-      if (data.user.isAdmin) {
-        window.location.href = '/admin'
-      } else {
-        window.location.href = `/${data.user.id}`
-      }
+      // Successful login
+      window.location.reload();
     } catch (err) {
       setError('An error occurred. Please try again.')
       setLoading(false)

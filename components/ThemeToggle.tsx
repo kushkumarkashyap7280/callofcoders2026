@@ -9,14 +9,7 @@ import { Button } from "@/components/ui/button";
 export function ThemeToggle() {
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = React.useState(false);
-  
 
-  React.useEffect(() => {
-    const storedTheme = localStorage.getItem("theme");
-    if (storedTheme === "light" || storedTheme === "dark" || storedTheme === "system") {
-      setTheme(storedTheme);
-    }
-  }, [setTheme]);
   // Avoid hydration mismatch
   React.useEffect(() => {
     setMounted(true);
