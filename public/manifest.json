@@ -1,0 +1,17 @@
+{
+  "name": "CallOfCoders - Kush Kumar",
+  "short_name": "CallOfCoders",
+  "description": "Free online code compiler and programming platform by Kush Kumar",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#3b82f6",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

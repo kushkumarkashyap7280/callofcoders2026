@@ -9,117 +9,7 @@ import { javascript } from '@codemirror/lang-javascript'
 import { java } from '@codemirror/lang-java'
 import { cpp } from '@codemirror/lang-cpp'
 import { oneDark } from '@codemirror/theme-one-dark'
-
-interface Language {
-  id: string
-  name: string
-  version: string
-  extensions: string[]
-}
-
-const LANGUAGES: Language[] = [
-  { id: 'python', name: 'Python', version: '3.10.0', extensions: ['.py'] },
-  { id: 'javascript', name: 'JavaScript', version: '18.15.0', extensions: ['.js'] },
-  { id: 'typescript', name: 'TypeScript', version: '5.0.3', extensions: ['.ts'] },
-  { id: 'java', name: 'Java', version: '15.0.2', extensions: ['.java'] },
-  { id: 'cpp', name: 'C++', version: '10.2.0', extensions: ['.cpp'] },
-  { id: 'c', name: 'C', version: '10.2.0', extensions: ['.c'] },
-  { id: 'rust', name: 'Rust', version: '1.68.2', extensions: ['.rs'] },
-  { id: 'go', name: 'Go', version: '1.16.2', extensions: ['.go'] },
-  { id: 'php', name: 'PHP', version: '8.2.3', extensions: ['.php'] },
-  { id: 'ruby', name: 'Ruby', version: '3.0.1', extensions: ['.rb'] },
-]
-
-const DEFAULT_CODE: Record<string, string> = {
-  python: `# Python code
-print("Hello, World!")
-
-def greet(name):
-    return f"Hello, {name}!"
-
-print(greet("Developer"))`,
-  javascript: `// JavaScript code
-console.log("Hello, World!");
-
-function greet(name) {
-    return \`Hello, \${name}!\`;
-}
-
-console.log(greet("Developer"));`,
-  typescript: `// TypeScript code
-console.log("Hello, World!");
-
-function greet(name: string): string {
-    return \`Hello, \${name}!\`;
-}
-
-console.log(greet("Developer"));`,
-  java: `public class Main {
-    public static void main(String[] args) {
-        System.out.println("Hello, World!");
-        System.out.println(greet("Developer"));
-    }
-    
-    public static String greet(String name) {
-        return "Hello, " + name + "!";
-    }
-}`,
-  cpp: `#include <iostream>
-#include <string>
-
-std::string greet(std::string name) {
-    return "Hello, " + name + "!";
-}
-
-int main() {
-    std::cout << "Hello, World!" << std::endl;
-    std::cout << greet("Developer") << std::endl;
-    return 0;
-}`,
-  c: `#include <stdio.h>
-
-int main() {
-    printf("Hello, World!\\n");
-    printf("Hello, Developer!\\n");
-    return 0;
-}`,
-  rust: `fn main() {
-    println!("Hello, World!");
-    println!("{}", greet("Developer"));
-}
-
-fn greet(name: &str) -> String {
-    format!("Hello, {}!", name)
-}`,
-  go: `package main
-
-import "fmt"
-
-func greet(name string) string {
-    return fmt.Sprintf("Hello, %s!", name)
-}
-
-func main() {
-    fmt.Println("Hello, World!")
-    fmt.Println(greet("Developer"))
-}`,
-  php: `<?php
-echo "Hello, World!\\n";
-
-function greet($name) {
-    return "Hello, " . $name . "!";
-}
-
-echo greet("Developer");
-?>`,
-  ruby: `puts "Hello, World!"
-
-def greet(name)
-    "Hello, #{name}!"
-end
-
-puts greet("Developer")`,
-}
+import { LANGUAGES, DEFAULT_CODE, type Language } from '@/constants'
 
 export default function Compiler() {
   const [selectedLanguage, setSelectedLanguage] = useState<Language>(LANGUAGES[0])
@@ -191,14 +81,14 @@ export default function Compiler() {
   }
 
   return (
-    <div className="flex h-screen bg-zinc-50 dark:bg-zinc-900">
-      {/* Left Sidebar - Language Selection */}
-      <div className="w-64 bg-white dark:bg-zinc-800 border-r border-zinc-200 dark:border-zinc-700 flex flex-col">
+    <div className="flex flex-col lg:flex-row min-h-screen h-auto lg:h-screen bg-zinc-50 dark:bg-zinc-900 w-full overflow-x-hidden">
+      {/* Left Sidebar - Language Selection - Hidden on mobile */}
+      <div className="hidden lg:flex w-64 bg-white dark:bg-zinc-800 border-r border-zinc-200 dark:border-zinc-700 flex-col">
         <div className="p-4 border-b border-zinc-200 dark:border-zinc-700">
-          <h2 className="text-xl font-bold text-zinc-800 dark:text-zinc-100">
+          <h2 className="text-xl font-heading font-bold text-zinc-800 dark:text-zinc-100">
             Code Compiler
           </h2>
-          <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-1">
+          <p className="text-sm font-medium text-zinc-500 dark:text-zinc-400 mt-1">
             Select a language
           </p>
         </div>
@@ -215,8 +105,8 @@ export default function Compiler() {
                     : 'bg-zinc-100 dark:bg-zinc-700 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-200 dark:hover:bg-zinc-600'
                 }`}
               >
-                <div className="font-medium">{language.name}</div>
-                <div className="text-xs opacity-75 mt-1">v{language.version}</div>
+                <div className="font-heading font-medium">{language.name}</div>
+                <div className="text-xs font-medium opacity-75 mt-1">v{language.version}</div>
               </button>
             ))}
           </div>
@@ -230,33 +120,43 @@ export default function Compiler() {
       </div>
 
       {/* Main Content Area */}
-      <div className="flex-1 flex flex-col">
+      <div className="flex-1 flex flex-col w-full overflow-x-hidden">
         {/* Top Bar */}
-        <div className="bg-white dark:bg-zinc-800 border-b border-zinc-200 dark:border-zinc-700 p-4 flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <div className="relative">
+        <div className="bg-white dark:bg-zinc-800 border-b border-zinc-200 dark:border-zinc-700 p-3 sm:p-4 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 sm:gap-4">
+          <div className="flex items-center gap-2 sm:gap-4 w-full sm:w-auto">
+            <div className="relative flex-1 sm:flex-initial">
               <button
                 onClick={() => setShowLanguages(!showLanguages)}
-                className="flex items-center gap-2 px-4 py-2 bg-zinc-100 dark:bg-zinc-700 rounded-lg hover:bg-zinc-200 dark:hover:bg-zinc-600 transition-all"
+                className="flex items-center justify-between w-full gap-2 px-3 sm:px-4 py-2 bg-zinc-100 dark:bg-zinc-700 rounded-lg hover:bg-zinc-200 dark:hover:bg-zinc-600 transition-all"
               >
-                <span className="font-medium text-zinc-800 dark:text-zinc-100">
+                <span className="font-heading font-medium text-sm sm:text-base text-zinc-800 dark:text-zinc-100">
                   {selectedLanguage.name}
                 </span>
-                <ChevronDown className="w-4 h-4" />
+                <ChevronDown className="w-4 h-4 shrink-0" />
               </button>
 
               {showLanguages && (
-                <div className="absolute top-full mt-2 left-0 bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-lg shadow-lg z-10 min-w-50 max-h-64 overflow-y-auto">
-                  {LANGUAGES.map((language) => (
-                    <button
-                      key={language.id}
-                      onClick={() => handleLanguageChange(language)}
-                      className="w-full text-left px-4 py-2 hover:bg-zinc-100 dark:hover:bg-zinc-700 transition-all"
-                    >
-                      {language.name}
-                    </button>
-                  ))}
-                </div>
+                <>
+                  {/* Mobile overlay */}
+                  <div 
+                    className="fixed inset-0 bg-black/50 z-40 lg:hidden"
+                    onClick={() => setShowLanguages(false)}
+                  />
+                  <div className="absolute top-full mt-2 left-0 right-0 sm:right-auto bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-lg shadow-lg z-50 sm:min-w-62.5 max-h-75 sm:max-h-64 overflow-y-auto">
+                    {LANGUAGES.map((language) => (
+                      <button
+                        key={language.id}
+                        onClick={() => handleLanguageChange(language)}
+                        className={`w-full text-left px-4 py-3 hover:bg-zinc-100 dark:hover:bg-zinc-700 transition-all border-b border-zinc-100 dark:border-zinc-700 last:border-b-0 ${
+                          selectedLanguage.id === language.id ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400' : ''
+                        }`}
+                      >
+                        <div className="font-heading font-medium">{language.name}</div>
+                        <div className="text-xs font-medium opacity-75 mt-0.5">v{language.version}</div>
+                      </button>
+                    ))}
+                  </div>
+                </>
               )}
             </div>
           </div>
@@ -264,7 +164,7 @@ export default function Compiler() {
           <Button
             onClick={runCode}
             disabled={isRunning}
-            className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg flex items-center gap-2"
+            className="bg-green-600 hover:bg-green-700 text-white px-4 sm:px-6 py-2 rounded-lg flex items-center justify-center gap-2 w-full sm:w-auto text-sm sm:text-base"
           >
             {isRunning ? (
               <>
@@ -281,11 +181,11 @@ export default function Compiler() {
         </div>
 
         {/* Code Editor and Output */}
-        <div className="flex-1 flex flex-col lg:flex-row overflow-hidden">
+        <div className="flex-1 flex flex-col overflow-hidden w-full">
           {/* Code Editor */}
-          <div className="flex-1 flex flex-col border-r border-zinc-200 dark:border-zinc-700">
-            <div className="bg-zinc-100 dark:bg-zinc-800 px-4 py-2 border-b border-zinc-200 dark:border-zinc-700">
-              <span className="text-sm font-medium text-zinc-600 dark:text-zinc-400">
+          <div className="flex-1 flex flex-col min-h-75 sm:min-h-100 border-b lg:border-b-0 lg:border-r border-zinc-200 dark:border-zinc-700">
+            <div className="bg-zinc-100 dark:bg-zinc-800 px-3 sm:px-4 py-2 border-b border-zinc-200 dark:border-zinc-700">
+              <span className="text-xs sm:text-sm font-heading font-semibold text-zinc-600 dark:text-zinc-400">
                 Editor
               </span>
             </div>
@@ -296,7 +196,7 @@ export default function Compiler() {
                 extensions={[getLanguageExtension()]}
                 theme={oneDark}
                 onChange={(value) => setCode(value)}
-                className="h-full text-sm"
+                className="h-full text-xs sm:text-sm"
                 basicSetup={{
                   lineNumbers: true,
                   highlightActiveLineGutter: true,
@@ -324,14 +224,14 @@ export default function Compiler() {
           </div>
 
           {/* Output Panel */}
-          <div className="flex-1 flex flex-col lg:max-w-[50%]">
-            <div className="bg-zinc-100 dark:bg-zinc-800 px-4 py-2 border-b border-zinc-200 dark:border-zinc-700">
-              <span className="text-sm font-medium text-zinc-600 dark:text-zinc-400">
+          <div className="flex-1 flex flex-col min-h-62.5 sm:min-h-75">
+            <div className="bg-zinc-100 dark:bg-zinc-800 px-3 sm:px-4 py-2 border-b border-zinc-200 dark:border-zinc-700">
+              <span className="text-xs sm:text-sm font-heading font-semibold text-zinc-600 dark:text-zinc-400">
                 Output
               </span>
             </div>
-            <div className="flex-1 p-4 bg-zinc-50 dark:bg-zinc-900 overflow-y-auto">
-              <pre className="text-sm font-mono text-zinc-800 dark:text-zinc-100 whitespace-pre-wrap">
+            <div className="flex-1 p-3 sm:p-4 bg-zinc-50 dark:bg-zinc-900 overflow-y-auto">
+              <pre className="text-xs sm:text-sm font-mono text-zinc-800 dark:text-zinc-100 whitespace-pre-wrap wrap-break-word">
                 {output || 'Click "Run Code" to see output...'}
               </pre>
             </div>

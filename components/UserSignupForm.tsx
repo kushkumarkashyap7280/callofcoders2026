@@ -267,9 +267,9 @@ export default function UserSignupForm() {
                   <motion.div
                     className={`relative flex items-center justify-center w-10 h-10 rounded-full font-semibold text-sm transition-all ${
                       isActive 
-                        ? 'bg-linear-to-r from-blue-600 via-purple-600 to-pink-600 text-white shadow-lg shadow-purple-500/50 scale-110' 
+                        ? 'bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 text-white shadow-lg shadow-purple-500/50 scale-110' 
                         : isCompleted
-                        ? 'bg-linear-to-r from-blue-500/80 to-purple-500/80 text-white'
+                        ? 'bg-gradient-to-r from-blue-500/80 to-purple-500/80 text-white'
                         : 'bg-zinc-100 dark:bg-zinc-800 text-zinc-400 dark:text-zinc-600'
                     }`}
                     animate={{
@@ -288,7 +288,7 @@ export default function UserSignupForm() {
                     )}
                     {isActive && (
                       <motion.div
-                        className="absolute inset-0 rounded-full bg-linear-to-r from-blue-600 via-purple-600 to-pink-600 opacity-50"
+                        className="absolute inset-0 rounded-full bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 opacity-50"
                         animate={{
                           scale: [1, 1.5],
                           opacity: [0.5, 0],
@@ -314,7 +314,7 @@ export default function UserSignupForm() {
                   <motion.div
                     className={`w-12 h-0.5 rounded-full transition-all ${
                       step < getStageNumber() 
-                        ? 'bg-linear-to-r from-blue-500 to-purple-500' 
+                        ? 'bg-gradient-to-r from-blue-500 to-purple-500' 
                         : 'bg-zinc-200 dark:bg-zinc-700'
                     }`}
                     initial={{ scaleX: 0 }}
@@ -337,10 +337,10 @@ export default function UserSignupForm() {
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             transition={{ delay: 0.3, type: "spring", stiffness: 200 }}
-            className="inline-flex items-center justify-center w-20 h-20 mb-4 rounded-3xl bg-linear-to-r from-blue-600 via-purple-600 to-pink-600 shadow-2xl shadow-purple-500/40 relative"
+            className="inline-flex items-center justify-center w-20 h-20 mb-4 rounded-3xl bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 shadow-2xl shadow-purple-500/40 relative"
           >
             <motion.div 
-              className="absolute inset-0 rounded-3xl bg-linear-to-r from-blue-400 via-purple-400 to-pink-400 opacity-0"
+              className="absolute inset-0 rounded-3xl bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 opacity-0"
               animate={{ 
                 opacity: [0, 0.5, 0],
                 scale: [1, 1.2, 1],
@@ -366,7 +366,7 @@ export default function UserSignupForm() {
               exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.3 }}
             >
-              <h1 className="text-4xl font-bold bg-linear-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent mb-3">
+              <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent mb-3">
                 {getStageTitle()}
               </h1>
               <p className="text-zinc-600 dark:text-zinc-400 text-sm">{getStageDescription()}</p>
@@ -446,7 +446,7 @@ export default function UserSignupForm() {
                     <Button
                       type="submit"
                       disabled={loading}
-                      className="w-full h-12 group bg-linear-to-r from-primary via-purple-600 to-pink-600 hover:shadow-xl hover:shadow-primary/30 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="w-full h-12 group bg-gradient-to-r from-primary via-purple-600 to-pink-600 hover:shadow-xl hover:shadow-primary/30 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
                       size="lg"
                     >
                       <span className="flex items-center gap-2">
@@ -596,7 +596,7 @@ export default function UserSignupForm() {
                     <Button
                       type="submit"
                       disabled={loading || countdown === 0}
-                      className="w-full h-12 group bg-linear-to-r from-primary via-purple-600 to-pink-600 hover:shadow-xl hover:shadow-primary/30 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="w-full h-12 group bg-gradient-to-r from-primary via-purple-600 to-pink-600 hover:shadow-xl hover:shadow-primary/30 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
                       size="lg"
                     >
                       <span className="flex items-center gap-2">
@@ -807,7 +807,7 @@ export default function UserSignupForm() {
                     <Button
                       type="submit"
                       disabled={loading}
-                      className="w-full h-12 group bg-linear-to-r from-primary via-purple-600 to-pink-600 hover:shadow-xl hover:shadow-primary/30 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="w-full h-12 group bg-gradient-to-r from-primary via-purple-600 to-pink-600 hover:shadow-xl hover:shadow-primary/30 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
                       size="lg"
                     >
                       <span className="flex items-center gap-2">

@@ -8,6 +8,7 @@ import { Code2, LogOut, User, Menu, X, Sparkles } from 'lucide-react'
 import { useAuth } from './AuthProvider'
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { createNavLinks } from '@/constants'
 
 export default function Navbar() {
   const router = useRouter()
@@ -37,13 +38,7 @@ export default function Navbar() {
     }
   }
 
-  const navLinks = [
-    { href: '/', label: 'Home', show: true },
-    { href: '/about', label: 'About', show: true },
-    { href: '/compiler', label: 'Compiler', show: true },
-    { href: '/profile', label: 'Profile', show: isAuthenticated && !isAdmin },
-    { href: '/admin', label: 'Admin', show: isAdmin },
-  ]
+  const navLinks = createNavLinks(isAuthenticated, isAdmin)
 
   return (
     <motion.nav 
@@ -55,7 +50,7 @@ export default function Navbar() {
       {/* Gradient border effect */}
       <div className="absolute inset-x-0 bottom-0 h-px bg-linear-to-r from-transparent via-blue-500/50 to-transparent" />
       
-      <div className="container mx-auto px-4">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
         <div className="flex h-16 items-center justify-between">
           {/* Logo/Brand */}
           <Link href="/" className="flex items-center gap-3 group">
@@ -70,10 +65,10 @@ export default function Navbar() {
               </div>
             </motion.div>
             <div className="flex flex-col">
-              <span className="text-xl font-bold bg-linear-to-r from-blue-600 via-purple-600 to-pink-600 dark:from-blue-400 dark:via-purple-400 dark:to-pink-400 bg-clip-text text-transparent">
+              <span className="text-xl font-heading font-bold bg-linear-to-r from-blue-600 via-purple-600 to-pink-600 dark:from-blue-400 dark:via-purple-400 dark:to-pink-400 bg-clip-text text-transparent">
                 CallOfCoders
               </span>
-              <span className="text-[10px] text-zinc-500 dark:text-zinc-400 -mt-1">by Kush Kumar</span>
+              <span className="text-[10px] font-medium text-zinc-500 dark:text-zinc-400 -mt-1">by Kush Kumar</span>
             </div>
           </Link>
 
@@ -83,7 +78,7 @@ export default function Navbar() {
               <Link 
                 key={link.href}
                 href={link.href}
-                className="relative px-4 py-2 text-sm font-medium text-zinc-700 dark:text-zinc-300 hover:text-blue-600 dark:hover:text-blue-400 transition-all duration-200 group"
+                className="relative px-4 py-2 text-sm font-heading font-medium text-zinc-700 dark:text-zinc-300 hover:text-blue-600 dark:hover:text-blue-400 transition-all duration-200 group"
               >
                 <span className="relative z-10">{link.label}</span>
                 <div className="absolute inset-0 bg-linear-to-r from-blue-500/10 to-purple-500/10 dark:from-blue-500/20 dark:to-purple-500/20 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity" />
@@ -194,9 +189,9 @@ export default function Navbar() {
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.2 }}
-            className="md:hidden border-t border-zinc-200 dark:border-zinc-800 bg-white/95 dark:bg-zinc-900/95 backdrop-blur-xl"
+            className="md:hidden border-t border-zinc-200 dark:border-zinc-800 bg-white/95 dark:bg-zinc-900/95 backdrop-blur-xl overflow-hidden w-full"
           >
-            <div className="container mx-auto px-4 py-4 space-y-3">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 space-y-3 w-full">
               {/* Mobile Nav Links */}
               {navLinks.map((link) => link.show && (
                 <motion.div

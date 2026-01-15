@@ -11,7 +11,7 @@ export default function UsersLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <div className="min-h-screen bg-white dark:bg-black">
+    <div className="min-h-screen bg-white dark:bg-black w-full overflow-x-hidden">
     
       {children}
     </div>
