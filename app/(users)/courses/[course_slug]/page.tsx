@@ -48,7 +48,7 @@ export default function CoursePage({ params }: { params: { course_slug: string }
   return (
     <div className="container mx-auto px-4 py-8 max-w-7xl">
       {/* Course Header */}
-      <div className="bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg p-6 sm:p-8 mb-8 text-white">
+      <div className="bg-linear-to-r from-blue-500 to-purple-600 rounded-lg p-6 sm:p-8 mb-8 text-white">
         <div className="max-w-3xl">
           <h1 className="text-3xl sm:text-4xl font-bold mb-4">{course.title}</h1>
           <p className="text-lg mb-6 opacity-90">{course.description}</p>
