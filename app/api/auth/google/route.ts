@@ -58,6 +58,7 @@ export async function POST(request: NextRequest) {
           email,
           name: name || email.split("@")[0],
           googleId: sub, // ⚠️ Store Google ID
+          profileImageUrl: picture || null, // Store Google profile picture
           passwordHash: "", // Empty password for Google OAuth users
           isAdmin: false,
         },
@@ -66,7 +67,20 @@ export async function POST(request: NextRequest) {
       // User exists with email but no googleId - link the Google account
       user = await prisma.user.update({
         where: { id: user.id },
-        data: { googleId: sub },
+        data: { 
+          googleId: sub,
+          name: name || user.name, // Update name if not set
+          profileImageUrl: picture || user.profileImageUrl, // Update profile image if not set
+        },
+      });
+    } else {
+      // User exists with googleId - update their profile data from Google
+      user = await prisma.user.update({
+        where: { id: user.id },
+        data: {
+          name: name || user.name, // Update name from Google
+          profileImageUrl: picture || user.profileImageUrl, // Update profile image from Google
+        },
       });
     }
 

@@ -103,7 +103,7 @@ export const socialLinks: SocialLink[] = [
   { 
     name: 'Email', 
     icon: Mail, 
-    href: 'mailto:kushkumarkashyap7280@gmail.com', 
+    href: 'mailto:kushkumar.officialsoftwaredev@gmail.com', 
     color: 'hover:text-red-500' 
   },
 ]
