@@ -46,7 +46,8 @@ export async function GET(request: NextRequest) {
           id: user.id,
           email: user.email,
           name: user.name,
-          isAdmin: user.isAdmin
+          isAdmin: user.isAdmin,
+          profileImageUrl: user.profileImageUrl
         }
       })
     } catch (jwtError) {

@@ -50,15 +50,17 @@ model Lesson {
   }
 
 model User {
-  id            String    @id @default(uuid())
-  email         String    @unique
-  name          String?
-  googleId      String?   @map("google_id") @unique
-  passwordHash  String    @map("password_hash")
-  isAdmin       Boolean   @default(false) @map("is_admin")  
-  createdAt     DateTime  @default(now()) @map("created_at")
-  updatedAt     DateTime  @updatedAt      @map("updated_at")  
-  enrollments   Enrollment[] 
+  id                String    @id @default(uuid())
+  email             String    @unique
+  name              String?
+  googleId          String?   @map("google_id") @unique
+  passwordHash      String    @map("password_hash")
+  isAdmin           Boolean   @default(false) @map("is_admin")  
+  profileImageUrl   String?   @map("profile_image_url") // Cloudinary image URL
+  cloudinaryImageId String?   @map("cloudinary_image_id") // Cloudinary public ID for deletion
+  createdAt         DateTime  @default(now()) @map("created_at")
+  updatedAt         DateTime  @updatedAt      @map("updated_at")  
+  enrollments       Enrollment[] 
   @@map("users")
 }
 

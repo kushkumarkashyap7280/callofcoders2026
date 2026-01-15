@@ -88,10 +88,11 @@ export default function Navbar() {
 
           {/* Right Side Actions */}
           <div className="flex items-center gap-3">
-            {/* Theme Toggle with animation */}
+            {/* Theme Toggle with animation - Hidden on mobile, visible on desktop */}
             <motion.div
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
+              className="hidden md:block"
             >
               <ThemeToggle />
             </motion.div>
@@ -109,8 +110,16 @@ export default function Navbar() {
                       whileHover={{ scale: 1.02 }}
                       className="flex items-center gap-2 px-4 py-2 bg-linear-to-r from-zinc-100 to-zinc-50 dark:from-zinc-800 dark:to-zinc-700 rounded-full border border-zinc-200 dark:border-zinc-600 shadow-sm"
                     >
-                      <div className="w-8 h-8 rounded-full bg-linear-to-br from-blue-500 to-purple-600 flex items-center justify-center">
-                        <User className="w-4 h-4 text-white" />
+                      <div className="w-8 h-8 rounded-full bg-linear-to-br from-blue-500 to-purple-600 flex items-center justify-center overflow-hidden">
+                        {user.profileImageUrl ? (
+                          <img 
+                            src={user.profileImageUrl} 
+                            alt={user.name || user.email} 
+                            className="w-full h-full object-cover"
+                          />
+                        ) : (
+                          <User className="w-4 h-4 text-white" />
+                        )}
                       </div>
                       <span className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
                         {user.email.split('@')[0]}
@@ -209,12 +218,28 @@ export default function Navbar() {
                 </motion.div>
               ))}
 
+              {/* Theme Toggle in Mobile Menu */}
+              <div className="p-4 border-t border-zinc-200 dark:border-zinc-800">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-medium text-zinc-700 dark:text-zinc-300">Theme</span>
+                  <ThemeToggle />
+                </div>
+              </div>
+
               {/* Mobile User Info */}
               {isAuthenticated && user?.email && (
                 <div className="px-4 py-3 bg-linear-to-r from-zinc-100 to-zinc-50 dark:from-zinc-800 dark:to-zinc-700 rounded-lg">
                   <div className="flex items-center gap-2">
-                    <div className="w-8 h-8 rounded-full bg-linear-to-br from-blue-500 to-purple-600 flex items-center justify-center">
-                      <User className="w-4 h-4 text-white" />
+                    <div className="w-8 h-8 rounded-full bg-linear-to-br from-blue-500 to-purple-600 flex items-center justify-center overflow-hidden">
+                      {user.profileImageUrl ? (
+                        <img 
+                          src={user.profileImageUrl} 
+                          alt={user.name || user.email} 
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <User className="w-4 h-4 text-white" />
+                      )}
                     </div>
                     <div>
                       <p className="text-sm font-medium text-zinc-700 dark:text-zinc-300">

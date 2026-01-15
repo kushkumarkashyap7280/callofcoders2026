@@ -28,6 +28,15 @@ export const getAccessTokenSecret = () => _ACCESS_TOKEN_SECRET || (_ACCESS_TOKEN
 export const getRefreshTokenSecret = () => process.env.REFRESH_TOKEN_SECRET;
 export const getJwtSecret = () => process.env.JWT_SECRET || getAccessTokenSecret();
 
+let _CLOUDINARY_CLOUD_NAME: string | undefined;
+export const getCloudinaryCloudName = () => _CLOUDINARY_CLOUD_NAME || (_CLOUDINARY_CLOUD_NAME = getRequiredEnv('CLOUDINARY_CLOUD_NAME'));
+
+let _CLOUDINARY_API_KEY: string | undefined;
+export const getCloudinaryApiKey = () => _CLOUDINARY_API_KEY || (_CLOUDINARY_API_KEY = getRequiredEnv('CLOUDINARY_API_KEY'));
+
+let _CLOUDINARY_API_SECRET: string | undefined;
+export const getCloudinaryApiSecret = () => _CLOUDINARY_API_SECRET || (_CLOUDINARY_API_SECRET = getRequiredEnv('CLOUDINARY_API_SECRET'));
+
 // Client-side environment variables (immediate evaluation is safe)
 export const NEXT_PUBLIC_GOOGLE_CLIENT_ID = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || '';
 
@@ -44,6 +53,9 @@ export function validateEnv() {
     'RESEND_API_KEY',
     'RESEND_FROM_EMAIL',
     'ACCESS_TOKEN_SECRET',
+    'CLOUDINARY_CLOUD_NAME',
+    'CLOUDINARY_API_KEY',
+    'CLOUDINARY_API_SECRET',
   ];
 
   const missing = required.filter(key => !process.env[key]);
@@ -63,6 +75,9 @@ export const env = {
   get ACCESS_TOKEN_SECRET() { return getAccessTokenSecret(); },
   get REFRESH_TOKEN_SECRET() { return getRefreshTokenSecret(); },
   get JWT_SECRET() { return getJwtSecret(); },
+  get CLOUDINARY_CLOUD_NAME() { return getCloudinaryCloudName(); },
+  get CLOUDINARY_API_KEY() { return getCloudinaryApiKey(); },
+  get CLOUDINARY_API_SECRET() { return getCloudinaryApiSecret(); },
   NEXT_PUBLIC_GOOGLE_CLIENT_ID,
   NODE_ENV,
 };
