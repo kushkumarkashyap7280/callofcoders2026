@@ -100,31 +100,7 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* Newsletter Section */}
-        <div className="border-t border-gray-200 dark:border-gray-800 pt-6 sm:pt-8 mb-6 sm:mb-8">
-          <div className="max-w-md">
-            <h3 className="text-base sm:text-lg font-heading font-semibold text-gray-900 dark:text-white mb-2">
-              Stay Updated
-            </h3>
-            <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mb-3 sm:mb-4">
-              Get the latest tutorials and updates delivered to your inbox.
-            </p>
-            <form className="flex flex-col sm:flex-row gap-2">
-              <input
-                type="email"
-                placeholder="Enter your email"
-                className="flex-1 px-3 sm:px-4 py-2 text-sm rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all w-full"
-                aria-label="Email address"
-              />
-              <button
-                type="submit"
-                className="px-4 sm:px-6 py-2 bg-linear-to-r from-blue-600 to-purple-600 text-white text-sm rounded-lg font-medium hover:from-blue-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all transform hover:scale-105 w-full sm:w-auto"
-              >
-                Subscribe
-              </button>
-            </form>
-          </div>
-        </div>
+       
 
         {/* Bottom Section */}
         <div className="border-t border-gray-200 dark:border-gray-800 pt-6 sm:pt-8">

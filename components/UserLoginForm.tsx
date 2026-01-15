@@ -1,6 +1,8 @@
 "use client"
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
+import { useAuth } from '@/components/AuthProvider'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -9,6 +11,8 @@ import { Mail, Lock, Eye, EyeOff, ArrowRight, LogIn, Loader2 } from 'lucide-reac
 import GoogleLoginButton from '@/components/GoogleLoginButton'
 
 export default function UserLoginForm() {
+  const router = useRouter()
+  const auth = useAuth()
   const [showPassword, setShowPassword] = useState(false)
   const [focusedField, setFocusedField] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
@@ -17,6 +21,12 @@ export default function UserLoginForm() {
     email: '',
     password: ''
   })
+
+  useEffect(() => {
+    if (!auth?.authState.loading && auth?.authState.isAuthenticated) {
+      router.push('/profile')
+    }
+  }, [auth?.authState.loading, auth?.authState.isAuthenticated, router])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -35,14 +45,12 @@ export default function UserLoginForm() {
 
       const data = await response.json()
 
-      if (!response.ok) {
-        setError(data.message || 'Login failed')
-        setLoading(false)
-        return
+      if(response.ok) {
+        window.location.reload()
       }
 
-      // Successful login
-      window.location.reload();
+      // Successful login - redirect based on role
+     
     } catch (err) {
       setError('An error occurred. Please try again.')
       setLoading(false)

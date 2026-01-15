@@ -1,12 +1,24 @@
 'use client'
 
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
+import { useAuth } from '@/components/AuthProvider'
 import { Button } from '@/components/ui/button'
 
 export default function AdminDashboard() {
   const router = useRouter()
+  const auth = useAuth()
   const [isLoggingOut, setIsLoggingOut] = React.useState(false)
+
+  useEffect(() => {
+    if (!auth?.authState.loading) {
+      if (!auth?.authState.isAuthenticated) {
+        router.push('/login')
+      } else if (!auth?.authState.isAdmin) {
+        router.push('/')
+      }
+    }
+  }, [auth?.authState.loading, auth?.authState.isAuthenticated, auth?.authState.isAdmin, router])
 
   const handleLogout = async () => {
     try {
@@ -24,6 +36,18 @@ export default function AdminDashboard() {
     } finally {
       setIsLoggingOut(false)
     }
+  }
+
+  if (auth?.authState.loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+      </div>
+    )
+  }
+
+  if (!auth?.authState.isAuthenticated || !auth?.authState.isAdmin) {
+    return null
   }
 
   return (

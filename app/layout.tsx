@@ -29,11 +29,15 @@ const jetbrainsMono = JetBrains_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "Kush Kumar | Full Stack Developer & Software Engineer Portfolio",
+    default: "Kush Kumar | Full Stack Developer & Founder of Call of Coders",
     template: "%s | Kush Kumar"
   },
   description: "Kush Kumar - Full Stack Developer & Software Engineer specializing in JavaScript, TypeScript, React, Next.js, Node.js, Python, Java, C++. Free online code compiler with instant execution, DSA tutorials, web development courses, and programming resources. Build, compile, test, and learn coding online.",
   keywords: [
+    "Call of Coders",
+    "Call of Coders Compiler",
+    "Call of Coders Tutorials",
+    "CallOfCoders",
     "Kush Kumar",
     "Kush Kumar Developer",
     "Kush Kumar Portfolio",
@@ -95,8 +99,8 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_US",
     url: "https://kushkumar.me",
-    siteName: "Kush Kumar",
-    title: "Kush Kumar | Full Stack Developer & Software Engineer",
+    siteName: "Call of Coders",
+    title: "Kush Kumar | Full Stack Developer & Founder of Call of Coders",
     description: "Kush Kumar - Full Stack Developer & Software Engineer. Free online code compiler for JavaScript, Python, TypeScript, Java, C++. Programming tutorials and developer resources.",
     images: [
       {
@@ -109,9 +113,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Kush Kumar | Full Stack Developer & Software Engineer",
+    title: "Kush Kumar | Full Stack Developer & Founder of Call of Coders",
     description: "Kush Kumar - Full Stack Developer. Free online code compiler and programming tutorials. JavaScript, Python, TypeScript, Java, C++.",
-    creator: "@kushkumar",
+    creator: "@CallOfCoders",
     images: ["https://kushkumar.me/twitter-image.png"],
   },
   alternates: {
@@ -120,9 +124,7 @@ export const metadata: Metadata = {
   category: "technology",
   classification: "Software Development, Online Compiler, Programming Education",
   applicationName: "Kush Kumar Developer Platform",
-  verification: {
-    google: "google-site-verification-code",
-  },
+
 };
 
 export default function RootLayout({
@@ -143,9 +145,13 @@ export default function RootLayout({
       url: 'https://kushkumar.me/about',
       jobTitle: 'Full Stack Developer',
       sameAs: [
-        'https://github.com/kushkumar',
-        'https://linkedin.com/in/kushkumar',
-        'https://twitter.com/kushkumar',
+        'https://github.com/kushkumarkashyap7280',
+        'https://www.linkedin.com/in/kush-kumar-b10020302/',
+        'https://x.com/CallOfCoders',
+        'https://www.youtube.com/@callofcodersbykush',
+        'https://www.instagram.com/callofcoders/',
+        'https://www.facebook.com/people/Call-of-Coders/61566491841146/',
+        'https://leetcode.com/kushkumarkashyap7280',
       ],
     },
     potentialAction: {

@@ -2,10 +2,12 @@
 
 import { GoogleLogin, GoogleOAuthProvider } from "@react-oauth/google";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { NEXT_PUBLIC_GOOGLE_CLIENT_ID } from "@/config/env";
 
 
 export default function GoogleLoginButton() {
+  const router = useRouter();
   const [loading, setLoading] = useState(false);
    
   
@@ -25,7 +27,6 @@ export default function GoogleLoginButton() {
       const data = await response.json();
 
       if (response.ok) {
-        // Successfully logged in
         window.location.reload();
       }
     } catch (error) {
