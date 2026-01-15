@@ -7,6 +7,7 @@ export interface NavLink {
 export const createNavLinks = (isAuthenticated: boolean, isAdmin: boolean): NavLink[] => [
   { href: '/', label: 'Home', show: true },
   { href: '/about', label: 'About', show: true },
+  { href: '/courses', label: 'Courses', show: true },
   { href: '/compiler', label: 'Compiler', show: true },
   { href: '/profile', label: 'Profile', show: isAuthenticated && !isAdmin },
   { href: '/admin', label: 'Admin', show: isAdmin },
