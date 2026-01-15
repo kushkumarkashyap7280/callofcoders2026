@@ -25,16 +25,15 @@ export default function CourseLessonsPage({ params }: { params: { course_slug: s
   }
 
   // User's enrollment (tracks currentLessonId and isCompleted)
-  const userEnrollment = null // TODO: Fetch from API
-  // {
-  //   id: 'enrollment-id',
-  //   userId: 'user-id',
-  //   courseId: '1',
-  //   enrolledAt: new Date('2026-01-10'),
-  //   lastAccessedAt: new Date('2026-01-14'),
-  //   currentLessonId: 'lesson-3',
-  //   isCompleted: false,
-  // }
+  const userEnrollment = {
+    id: 'enrollment-1',
+    userId: 'user-1',
+    courseId: '1',
+    enrolledAt: new Date('2026-01-10'),
+    lastAccessedAt: new Date('2026-01-14'),
+    currentLessonId: '3',
+    isCompleted: false,
+  }
 
   const lessons = [
     {
@@ -117,7 +116,7 @@ export default function CourseLessonsPage({ params }: { params: { course_slug: s
           >
             <div className="flex items-start gap-4">
               {/* Lesson Number */}
-              <div className="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center">
+              <div className="shrink-0 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center">
                 <span className="text-blue-600 dark:text-blue-400 font-semibold">
                   {lesson.sequenceNo}
                 </span>

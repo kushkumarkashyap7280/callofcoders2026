@@ -66,16 +66,15 @@ export default function LessonPage({
     lastAccessedAt: Date
     currentLessonId: string
     isCompleted: boolean
-  } | null = null // TODO: Fetch from API
-  // {
-  //   id: 'enrollment-id',
-  //   userId: 'user-id',
-  //   courseId: '1',
-  //   enrolledAt: new Date('2026-01-10'),
-  //   lastAccessedAt: new Date('2026-01-14'),
-  //   currentLessonId: '1',
-  //   isCompleted: false,
-  // }
+  } | null = {
+    id: 'enrollment-1',
+    userId: 'user-1',
+    courseId: '1',
+    enrolledAt: new Date('2026-01-10'),
+    lastAccessedAt: new Date('2026-01-14'),
+    currentLessonId: '1',
+    isCompleted: false,
+  } // TODO: Fetch from API
 
   const allLessons = [lesson] // TODO: Fetch all lessons for progress calculation
   const currentLessonIndex = userEnrollment?.currentLessonId 

@@ -35,16 +35,15 @@ export default function CoursePage({ params }: { params: { course_slug: string }
   }
 
   // User's enrollment in this course (null if not enrolled)
-  const userEnrollment = null // TODO: Fetch from API
-  // {
-  //   id: 'enrollment-id',
-  //   userId: 'user-id',
-  //   courseId: '1',
-  //   enrolledAt: new Date('2026-01-10'),
-  //   lastAccessedAt: new Date('2026-01-14'),
-  //   currentLessonId: 'lesson-3',
-  //   isCompleted: false,
-  // }
+  const userEnrollment = {
+    id: 'enrollment-1',
+    userId: 'user-1',
+    courseId: '1',
+    enrolledAt: new Date('2026-01-10'),
+    lastAccessedAt: new Date('2026-01-14'),
+    currentLessonId: '3',
+    isCompleted: false,
+  }
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-7xl">
