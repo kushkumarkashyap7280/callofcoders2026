@@ -119,12 +119,12 @@ export default function AdminLogin() {
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
                   transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
-                  className="inline-flex items-center justify-center w-20 h-20 mb-4 rounded-2xl bg-gradient-to-br from-orange-600 to-red-600 shadow-lg shadow-orange-600/25"
+                  className="inline-flex items-center justify-center w-20 h-20 mb-4 rounded-2xl bg-linear-to-br from-orange-600 to-red-600 shadow-lg shadow-orange-600/25"
                 >
                   <ShieldCheck className="w-10 h-10 text-white" />
                 </motion.div>
                 <div className="flex items-center justify-center gap-2 mb-2">
-                  <h2 className="text-3xl font-bold bg-gradient-to-r from-orange-600 via-red-600 to-purple-600 bg-clip-text text-transparent">
+                  <h2 className="text-3xl font-bold bg-linear-to-r from-orange-600 via-red-600 to-purple-600 bg-clip-text text-transparent">
                     Admin Access
                   </h2>
                   <Crown className="w-6 h-6 text-yellow-500" />
@@ -191,7 +191,7 @@ export default function AdminLogin() {
                 <Button
                   type="submit"
                   disabled={loading}
-                  className="w-full h-12 bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-700 hover:to-red-700 text-white font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
+                  className="w-full h-12 bg-linear-to-r from-orange-600 to-red-600 hover:from-orange-700 hover:to-red-700 text-white font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
                 >
                   {loading ? (
                     <>

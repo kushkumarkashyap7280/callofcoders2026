@@ -106,10 +106,10 @@ export default function UserLoginForm() {
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
-            className="inline-flex items-center justify-center w-20 h-20 mb-6 rounded-3xl bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 shadow-2xl shadow-purple-500/40 relative"
+            className="inline-flex items-center justify-center w-20 h-20 mb-6 rounded-3xl bg-linear-to-r from-blue-600 via-purple-600 to-pink-600 shadow-2xl shadow-purple-500/40 relative"
           >
             <motion.div 
-              className="absolute inset-0 rounded-3xl bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 opacity-0"
+              className="absolute inset-0 rounded-3xl bg-linear-to-r from-blue-400 via-purple-400 to-pink-400 opacity-0"
               animate={{ 
                 opacity: [0, 0.5, 0],
                 scale: [1, 1.2, 1],
@@ -121,7 +121,7 @@ export default function UserLoginForm() {
             />
             <LogIn className="w-9 h-9 text-white relative z-10" />
           </motion.div>
-          <h1 className="text-5xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent mb-3">
+          <h1 className="text-5xl font-bold bg-linear-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent mb-3">
             Welcome Back
           </h1>
           <p className="text-zinc-600 dark:text-zinc-400 text-sm">Sign in to continue your coding journey</p>
@@ -256,11 +256,11 @@ export default function UserLoginForm() {
             <Button
               type="submit"
               disabled={loading}
-              className="w-full h-13 group relative overflow-hidden bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 hover:from-blue-700 hover:via-purple-700 hover:to-pink-700 shadow-xl shadow-purple-500/30 hover:shadow-2xl hover:shadow-purple-500/40 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold text-base rounded-xl"
+              className="w-full h-13 group relative overflow-hidden bg-linear-to-r from-blue-600 via-purple-600 to-pink-600 hover:from-blue-700 hover:via-purple-700 hover:to-pink-700 shadow-xl shadow-purple-500/30 hover:shadow-2xl hover:shadow-purple-500/40 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold text-base rounded-xl"
               size="lg"
             >
               <motion.div 
-                className="absolute inset-0 bg-gradient-to-r from-pink-600 via-purple-600 to-blue-600 opacity-0 group-hover:opacity-100 transition-opacity"
+                className="absolute inset-0 bg-linear-to-r from-pink-600 via-purple-600 to-blue-600 opacity-0 group-hover:opacity-100 transition-opacity"
               />
               <span className="flex items-center gap-2 relative z-10">
                 {loading ? (
