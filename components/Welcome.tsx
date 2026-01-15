@@ -48,11 +48,11 @@ export default function Welcome() {
   }
 
   return (
-    <div className="min-h-screen relative overflow-hidden bg-linear-to-br from-blue-50 via-white to-purple-50 dark:from-zinc-900 dark:via-zinc-800 dark:to-zinc-900">
+    <div className="min-h-screen relative overflow-hidden bg-linear-to-br from-blue-50 via-white to-purple-50 dark:from-zinc-900 dark:via-zinc-800 dark:to-zinc-900 w-full">
       {/* Animated background elements */}
-      <div className="absolute inset-0 overflow-hidden">
+      <div className="absolute inset-0 overflow-hidden w-full">
         <motion.div
-          className="absolute top-20 left-10 w-72 h-72 bg-blue-400/20 dark:bg-blue-600/20 rounded-full blur-3xl"
+          className="absolute top-20 left-10 w-48 h-48 sm:w-72 sm:h-72 bg-blue-400/20 dark:bg-blue-600/20 rounded-full blur-3xl"
           animate={{
             scale: [1, 1.2, 1],
             x: [0, 50, 0],
@@ -64,7 +64,7 @@ export default function Welcome() {
           }}
         />
         <motion.div
-          className="absolute top-40 right-20 w-96 h-96 bg-purple-400/20 dark:bg-purple-600/20 rounded-full blur-3xl"
+          className="absolute top-40 right-20 w-64 h-64 sm:w-96 sm:h-96 bg-purple-400/20 dark:bg-purple-600/20 rounded-full blur-3xl"
           animate={{
             scale: [1, 1.3, 1],
             x: [0, -30, 0],
@@ -76,7 +76,7 @@ export default function Welcome() {
           }}
         />
         <motion.div
-          className="absolute bottom-20 left-1/3 w-80 h-80 bg-pink-400/20 dark:bg-pink-600/20 rounded-full blur-3xl"
+          className="absolute bottom-20 left-1/3 w-56 h-56 sm:w-80 sm:h-80 bg-pink-400/20 dark:bg-pink-600/20 rounded-full blur-3xl"
           animate={{
             scale: [1, 1.1, 1],
             x: [0, 40, 0],
@@ -127,21 +127,21 @@ export default function Welcome() {
         {/* Welcome text */}
         <motion.h1
           variants={itemVariants}
-          className="text-6xl md:text-8xl font-bold mb-6 bg-linear-to-r from-blue-600 via-purple-600 to-pink-600 dark:from-blue-400 dark:via-purple-400 dark:to-pink-400 bg-clip-text text-transparent"
+          className="text-6xl md:text-8xl font-heading font-bold mb-6 bg-linear-to-r from-blue-600 via-purple-600 to-pink-600 dark:from-blue-400 dark:via-purple-400 dark:to-pink-400 bg-clip-text text-transparent tracking-tight"
         >
           Welcome
         </motion.h1>
 
         <motion.p
           variants={itemVariants}
-          className="text-xl md:text-2xl text-zinc-600 dark:text-zinc-300 mb-4 max-w-2xl"
+          className="text-xl md:text-2xl font-heading font-medium text-zinc-600 dark:text-zinc-300 mb-4 max-w-2xl"
         >
           Embark on your learning journey
         </motion.p>
 
         <motion.p
           variants={itemVariants}
-          className="text-lg text-zinc-500 dark:text-zinc-400 mb-12 max-w-xl"
+          className="text-lg font-medium text-zinc-500 dark:text-zinc-400 mb-12 max-w-xl leading-relaxed"
         >
           Discover courses, expand your knowledge, and transform your skills with our comprehensive learning platform
         </motion.p>
@@ -157,7 +157,7 @@ export default function Welcome() {
           >
             <Button
               onClick={() => router.push('/signup')}
-              className="px-8 py-4 text-lg bg-linear-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-xl shadow-lg hover:shadow-xl transition-all"
+              className="px-8 py-4 text-lg font-heading font-semibold bg-linear-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-xl shadow-lg hover:shadow-xl transition-all"
             >
               Get Started
             </Button>
@@ -169,7 +169,7 @@ export default function Welcome() {
           >
             <Button
               onClick={() => router.push('/')}
-              className="px-8 py-4 text-lg bg-white dark:bg-zinc-800 border-2 border-zinc-200 dark:border-zinc-700 hover:border-blue-500 dark:hover:border-blue-500 text-zinc-800 dark:text-zinc-100 rounded-xl shadow-lg hover:shadow-xl transition-all"
+              className="px-8 py-4 text-lg font-heading font-semibold bg-white dark:bg-zinc-800 border-2 border-zinc-200 dark:border-zinc-700 hover:border-blue-500 dark:hover:border-blue-500 text-zinc-800 dark:text-zinc-100 rounded-xl shadow-lg hover:shadow-xl transition-all"
             >
               Learn More
             </Button>
