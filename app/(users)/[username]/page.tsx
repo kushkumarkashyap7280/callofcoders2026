@@ -28,6 +28,7 @@ interface PublicUser {
   name: string | null;
   profileImageUrl: string | null;
   metadata: any;
+  isAdmin?: boolean; // May be included for admin check
   createdAt: Date;
   enrollments: Array<{
     courseId: string;
@@ -90,12 +91,7 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
   const decodedUsername = decodeURIComponent(username);
 
   // Check if user is authenticated using verify API
-  const { isAuthenticated, user, isAdmin } = await checkAuth();
-
-  // Redirect admins to home page
-  if (isAdmin) {
-    redirect("/");
-  }
+  const { isAuthenticated, user } = await checkAuth();
 
   // Check if viewing own profile (compare usernames)
   const isOwnProfile = isAuthenticated && user?.username === decodedUsername;
@@ -105,12 +101,19 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
     return <ProfileContent />;
   }
 
-  // Fetch public profile data (whether logged in or not)
+  // Viewing someone else's profile (or not logged in)
+  // Fetch public profile data
   const publicUser = await fetchPublicUserData(decodedUsername);
 
   if (!publicUser) {
-    // User not found - show error via client component and redirect
+    // User not found
     return <ProfilePageClient error="User not found" />;
+  }
+
+  // Check if the profile being viewed is an admin
+  if (publicUser.isAdmin === true) {
+    // Don't allow viewing admin profiles
+    return <ProfilePageClient error="This profile is not available" />;
   }
 
   // Show public profile view

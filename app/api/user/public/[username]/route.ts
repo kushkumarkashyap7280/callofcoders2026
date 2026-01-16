@@ -30,6 +30,7 @@ export async function GET(
         name: true,
         profileImageUrl: true,
         metadata: true,
+        isAdmin: true, // Include to check if profile can be viewed
         createdAt: true,
         enrollments: {
           where: {
@@ -48,7 +49,7 @@ export async function GET(
             },
           },
         },
-        // Exclude: passwordHash, googleId, isAdmin, cloudinaryImageId
+        // Exclude: passwordHash, googleId, cloudinaryImageId
       },
     });
 
