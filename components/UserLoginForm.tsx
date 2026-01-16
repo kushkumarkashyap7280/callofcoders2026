@@ -9,6 +9,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Mail, Lock, Eye, EyeOff, ArrowRight, LogIn, Loader2 } from 'lucide-react'
 import GoogleLoginButton from '@/components/GoogleLoginButton'
+import { toast } from 'sonner'
 
 export default function UserLoginForm() {
   const router = useRouter()
@@ -24,9 +25,14 @@ export default function UserLoginForm() {
 
   useEffect(() => {
     if (!auth?.authState.loading && auth?.authState.isAuthenticated) {
-      router.push('/profile')
+      // Use username from auth state
+      if (auth.authState.user?.username) {
+        router.push(`/${auth.authState.user.username}`);
+      } else {
+        router.push('/');
+      }
     }
-  }, [auth?.authState.loading, auth?.authState.isAuthenticated, router])
+  }, [auth?.authState.loading, auth?.authState.isAuthenticated, auth?.authState.user?.username, router])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -46,12 +52,16 @@ export default function UserLoginForm() {
       const data = await response.json()
 
       if(response.ok) {
+        toast.success('Login successful! Redirecting...')
         window.location.reload()
+      } else {
+        toast.error(data.message || 'Invalid credentials')
+        setError(data.message || 'Invalid credentials')
+        setLoading(false)
       }
-
-      // Successful login - redirect based on role
      
     } catch (err) {
+      toast.error('An error occurred. Please try again.')
       setError('An error occurred. Please try again.')
       setLoading(false)
     }

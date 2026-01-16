@@ -4,6 +4,7 @@ import { GoogleLogin, GoogleOAuthProvider } from "@react-oauth/google";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { NEXT_PUBLIC_GOOGLE_CLIENT_ID } from "@/config/env";
+import { toast } from "sonner";
 
 
 export default function GoogleLoginButton() {
@@ -27,11 +28,14 @@ export default function GoogleLoginButton() {
       const data = await response.json();
 
       if (response.ok) {
+        toast.success("Successfully signed in with Google!");
         window.location.reload();
+      } else {
+        toast.error(data.message || "Failed to sign in with Google");
       }
     } catch (error) {
       console.error("Error during Google login:", error);
-      alert("An error occurred during Google login");
+      toast.error("An error occurred during Google login");
     } finally {
       setLoading(false);
     }
@@ -41,7 +45,7 @@ export default function GoogleLoginButton() {
 
   const handleGoogleError = () => {
     console.error("Google login failed");
-    alert("Google login failed. Please try again.");
+    toast.error("Google login failed. Please try again.");
   };
 
   // Get Google Client ID from environment variable

@@ -62,7 +62,7 @@ export const footerLinks = {
   product: [
     { name: 'Compiler', href: '/compiler' },
     { name: 'About', href: '/about' },
-    { name: 'Profile', href: '/profile' },
+    { name: 'Login', href: '/login' },
   ],
   resources: [
     { name: 'Documentation', href: '#' },

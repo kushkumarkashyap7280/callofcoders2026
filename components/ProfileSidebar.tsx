@@ -8,9 +8,10 @@ import { User, Settings, X } from 'lucide-react'
 interface ProfileSidebarProps {
   isOpen: boolean
   onClose: () => void
+  username?: string
 }
 
-export default function ProfileSidebar({ isOpen, onClose }: ProfileSidebarProps) {
+export default function ProfileSidebar({ isOpen, onClose, username }: ProfileSidebarProps) {
   const pathname = usePathname()
   
   const menuItems = [
@@ -18,14 +19,14 @@ export default function ProfileSidebar({ isOpen, onClose }: ProfileSidebarProps)
       id: 'profile',
       label: 'Profile',
       icon: User,
-      href: '/profile',
+      href: username ? `/${username}` : '/login',
       description: 'View and edit your profile'
     },
     {
       id: 'settings',
       label: 'Settings',
       icon: Settings,
-      href: '/profile/settings',
+      href: username ? `/${username}/settings` : '/login',
       description: 'Manage your account settings'
     },
   ]

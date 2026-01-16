@@ -28,9 +28,6 @@ export function middleware(request: NextRequest) {
 
   // Admin-only routes
   const adminRoutes = ['/admin']
-  
-  // User routes (accessible by both users and admins)
-  const userRoutes = ['/profile']
 
   // Check if the current path is public
   const isPublicRoute = publicRoutes.some(route => pathname === route || pathname.startsWith(route))
@@ -61,14 +58,6 @@ export function middleware(request: NextRequest) {
       const url = request.nextUrl.clone()
       url.pathname = '/'
       return NextResponse.redirect(url)
-    }
-
-    // Check if trying to access user routes
-    const isUserRoute = userRoutes.some(route => pathname === route || pathname.startsWith(route))
-    
-    if (isUserRoute) {
-      // Both regular users and admins can access user routes
-      return NextResponse.next()
     }
 
     // Allow access to other protected routes

@@ -3,6 +3,7 @@ import { OAuth2Client } from "google-auth-library";
 import jwt from "jsonwebtoken";
 import prisma from "@/lib/prisma";
 import { getJwtSecret, NODE_ENV, NEXT_PUBLIC_GOOGLE_CLIENT_ID } from "@/config/env";
+import { generateUniqueUsername } from "@/lib/username";
 
 export async function POST(request: NextRequest) {
   try {
@@ -51,12 +52,16 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    // If user doesn't exist, create a new one
+    // If user doesn't exist, create a new one with auto-generated username
     if (!user) {
+      // Generate unique username from name
+      const username = await generateUniqueUsername(name || email.split("@")[0]);
+      
       user = await prisma.user.create({
         data: {
           email,
           name: name || email.split("@")[0],
+          username, // Auto-generated unique username
           googleId: sub, // ⚠️ Store Google ID
           profileImageUrl: picture || null, // Store Google profile picture
           passwordHash: "", // Empty password for Google OAuth users
@@ -65,22 +70,37 @@ export async function POST(request: NextRequest) {
       });
     } else if (!user.googleId) {
       // User exists with email but no googleId - link the Google account
+      // Also generate username if they don't have one
+      const updateData: any = { 
+        googleId: sub,
+        name: name || user.name, // Update name if not set
+        profileImageUrl: picture || user.profileImageUrl, // Update profile image if not set
+      };
+      
+      // If user doesn't have a username, generate one
+      if (!user.username) {
+        updateData.username = await generateUniqueUsername(name || user.name || email.split("@")[0]);
+      }
+      
       user = await prisma.user.update({
         where: { id: user.id },
-        data: { 
-          googleId: sub,
-          name: name || user.name, // Update name if not set
-          profileImageUrl: picture || user.profileImageUrl, // Update profile image if not set
-        },
+        data: updateData,
       });
     } else {
       // User exists with googleId - update their profile data from Google
+      const updateData: any = {
+        name: name || user.name, // Update name from Google
+        profileImageUrl: picture || user.profileImageUrl, // Update profile image from Google
+      };
+      
+      // If user doesn't have a username, generate one
+      if (!user.username) {
+        updateData.username = await generateUniqueUsername(name || user.name || email.split("@")[0]);
+      }
+      
       user = await prisma.user.update({
         where: { id: user.id },
-        data: {
-          name: name || user.name, // Update name from Google
-          profileImageUrl: picture || user.profileImageUrl, // Update profile image from Google
-        },
+        data: updateData,
       });
     }
 
@@ -90,6 +110,7 @@ export async function POST(request: NextRequest) {
         email: user.email,
         id: user.id,
         name: user.name,
+        username: user.username,
         isAdmin: user.isAdmin,
       },
       getJwtSecret(),
@@ -103,6 +124,7 @@ export async function POST(request: NextRequest) {
         id: user.id,
         email: user.email,
         name: user.name,
+        username: user.username,
         isAdmin: user.isAdmin,
       },
     });

@@ -78,7 +78,11 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
         router.push('/admin');
       }else{
         console.log("User is not an admin.");
-        router.push('/profile');
+        if (authstate.user.username) {
+          router.push(`/${authstate.user.username}`);
+        } else {
+          router.push('/');
+        }
       }
     }
   }, [authstate]);

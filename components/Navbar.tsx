@@ -38,7 +38,7 @@ export default function Navbar() {
     }
   }
 
-  const navLinks = createNavLinks(isAuthenticated, isAdmin)
+  const navLinks = createNavLinks(isAuthenticated, isAdmin, user?.username)
 
   return (
     <motion.nav 

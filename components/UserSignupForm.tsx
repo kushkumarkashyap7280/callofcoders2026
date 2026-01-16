@@ -9,6 +9,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Mail, Lock, User, Eye, EyeOff, ArrowRight, Sparkles, Shield, Check, Loader2 } from 'lucide-react'
 import GoogleLoginButton from '@/components/GoogleLoginButton'
+import { toast } from 'sonner'
 
 type Stage = 'email' | 'verify' | 'complete'
 
@@ -26,15 +27,21 @@ export default function UserSignupForm() {
     email: '',
     verificationCode: '',
     name: '',
+    username: '',
     password: '',
     confirmPassword: ''
   })
 
   useEffect(() => {
     if (!auth?.authState.loading && auth?.authState.isAuthenticated) {
-      router.push('/profile')
+      // Use username from auth state
+      if (auth.authState.user?.username) {
+        router.push(`/${auth.authState.user.username}`);
+      } else {
+        router.push('/');
+      }
     }
-  }, [auth?.authState.loading, auth?.authState.isAuthenticated, router])
+  }, [auth?.authState.loading, auth?.authState.isAuthenticated, auth?.authState.user?.username, router])
 
   // Countdown timer for OTP expiration (5 minutes)
   useEffect(() => {
@@ -67,11 +74,13 @@ export default function UserSignupForm() {
       const data = await response.json()
 
       if (!response.ok) {
+        toast.error(data.message || 'Failed to send OTP')
         setError(data.message || 'Failed to send OTP')
         setLoading(false)
         return
       }
 
+      toast.success('OTP sent to your email!')
       // Set 5-minute countdown
       setCountdown(300)
       setStage('verify')
@@ -81,6 +90,7 @@ export default function UserSignupForm() {
         console.log('OTP Code (dev only):', data.otpCode)
       }
     } catch (err) {
+      toast.error('An error occurred. Please try again.')
       setError('An error occurred. Please try again.')
     } finally {
       setLoading(false)
@@ -105,13 +115,16 @@ export default function UserSignupForm() {
       const data = await response.json()
 
       if (!response.ok) {
+        toast.error(data.message || 'Invalid OTP')
         setError(data.message || 'Invalid OTP')
         setLoading(false)
         return
       }
 
+      toast.success('Email verified! Complete your profile')
       setStage('complete')
     } catch (err) {
+      toast.error('An error occurred. Please try again.')
       setError('An error occurred. Please try again.')
     } finally {
       setLoading(false)
@@ -123,7 +136,30 @@ export default function UserSignupForm() {
     setLoading(true)
     setError('')
 
+    // Validate username
+    if (!formData.username || formData.username.length < 3) {
+      toast.error('Username must be at least 3 characters')
+      setError('Username must be at least 3 characters')
+      setLoading(false)
+      return
+    }
+
+    if (formData.username.length > 10) {
+      toast.error('Username must be at most 10 characters')
+      setError('Username must be at most 10 characters')
+      setLoading(false)
+      return
+    }
+
+    if (!/^[a-z0-9]+$/.test(formData.username)) {
+      toast.error('Username can only contain lowercase letters and numbers')
+      setError('Username can only contain lowercase letters and numbers')
+      setLoading(false)
+      return
+    }
+
     if (formData.password !== formData.confirmPassword) {
+      toast.error('Passwords do not match')
       setError('Passwords do not match')
       setLoading(false)
       return
@@ -136,6 +172,7 @@ export default function UserSignupForm() {
         body: JSON.stringify({
           email: formData.email,
           name: formData.name,
+          username: formData.username,
           password: formData.password,
           confirmPassword: formData.confirmPassword
         })
@@ -144,14 +181,17 @@ export default function UserSignupForm() {
       const data = await response.json()
 
       if (!response.ok) {
+        toast.error(data.message || 'Failed to create account')
         setError(data.message || 'Failed to create account')
         setLoading(false)
         return
       }
 
+      toast.success('Account created successfully! Please login')
       // Redirect to login or dashboard
       router.push('/login?signup=success')
     } catch (err) {
+      toast.error('An error occurred. Please try again.')
       setError('An error occurred. Please try again.')
     } finally {
       setLoading(false)
@@ -180,17 +220,20 @@ export default function UserSignupForm() {
       const data = await response.json()
 
       if (!response.ok) {
+        toast.error(data.message || 'Failed to resend OTP')
         setError(data.message || 'Failed to resend OTP')
         setLoading(false)
         return
       }
 
+      toast.success('OTP resent to your email!')
       setCountdown(300)
       
       if (data.otpCode) {
         console.log('OTP Code (dev only):', data.otpCode)
       }
     } catch (err) {
+      toast.error('An error occurred. Please try again.')
       setError('An error occurred. Please try again.')
     } finally {
       setLoading(false)
@@ -694,6 +737,47 @@ export default function UserSignupForm() {
                       className="h-12 transition-all border-2 focus:border-primary/50 focus:shadow-lg focus:shadow-primary/10"
                     />
                   </motion.div>
+                </motion.div>
+
+                <motion.div 
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: 0.1 }}
+                  className="space-y-2"
+                >
+                  <Label htmlFor="username" className="flex items-center gap-2 text-sm font-medium">
+                    <motion.div
+                      animate={focusedField === 'username' ? { scale: 1.2, rotate: 360 } : { scale: 1, rotate: 0 }}
+                      transition={{ duration: 0.3 }}
+                    >
+                      <User className="w-4 h-4 text-primary" />
+                    </motion.div>
+                    Username
+                  </Label>
+                  <motion.div
+                    whileFocus={{ scale: 1.01 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    <Input
+                      id="username"
+                      name="username"
+                      type="text"
+                      placeholder="johndoe123"
+                      value={formData.username}
+                      onChange={handleChange}
+                      onFocus={() => setFocusedField('username')}
+                      onBlur={() => setFocusedField(null)}
+                      required
+                      minLength={3}
+                      maxLength={10}
+                      pattern="[a-z0-9]+"
+                      title="Lowercase letters and numbers only, 3-10 characters"
+                      className="h-12 transition-all border-2 focus:border-primary/50 focus:shadow-lg focus:shadow-primary/10"
+                    />
+                  </motion.div>
+                  <p className="text-xs text-muted-foreground">
+                    3-10 characters, lowercase letters and numbers only
+                  </p>
                 </motion.div>
 
                 <motion.div 

@@ -2,15 +2,34 @@ import { NextRequest, NextResponse } from 'next/server'
 import prisma from '@/lib/prisma'
 import { $Enums } from '@/app/generated/prisma/client'
 import bcrypt from 'bcryptjs'
+import { validateUsername, isUsernameAvailable } from '@/lib/username'
 
 export async function POST(request: NextRequest) {
   try {
-    const { email, name, password, confirmPassword } = await request.json()
+    const { email, name, username, password, confirmPassword } = await request.json()
 
     // Validation
-    if (!email || !name || !password || !confirmPassword) {
+    if (!email || !name || !username || !password || !confirmPassword) {
       return NextResponse.json(
         { success: false, message: 'All fields are required' },
+        { status: 400 }
+      )
+    }
+
+    // Validate username format
+    const usernameValidation = validateUsername(username)
+    if (!usernameValidation.valid) {
+      return NextResponse.json(
+        { success: false, message: usernameValidation.error },
+        { status: 400 }
+      )
+    }
+
+    // Check if username is available
+    const isAvailable = await isUsernameAvailable(username)
+    if (!isAvailable) {
+      return NextResponse.json(
+        { success: false, message: 'Username is already taken' },
         { status: 400 }
       )
     }
@@ -61,11 +80,13 @@ export async function POST(request: NextRequest) {
       data: {
         email,
         name,
+        username,
         passwordHash
       },
       select: {
         id: true,
         email: true,
+        username: true,
         name: true,
         createdAt: true
       }
