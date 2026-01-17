@@ -1,6 +1,7 @@
 'use client'
 
 import { useRouter } from "next/navigation";
+import AppLoader from '@/components/ui/AppLoader';
 import { createContext,useContext, useEffect, useState } from "react";
 
 interface AuthState {
@@ -21,6 +22,7 @@ export const useAuth = () => useContext(AuthContex);
 function AuthProvider({ children }: { children: React.ReactNode }) {
 
    const router = useRouter();
+   
    const [authstate , setAuthState] = useState<AuthState>({
     loading: true,
     isAuthenticated: false,
@@ -85,13 +87,13 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
         }
       }
     }
+    
   }, [authstate]);
 
   return (
     <AuthContex.Provider value={{authState: authstate, setAuthState}}>
-      {children}
+      {authstate.loading ? <AppLoader /> : children}
     </AuthContex.Provider>
-    
   )
 }
 
