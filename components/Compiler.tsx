@@ -15,6 +15,7 @@ export default function Compiler() {
   const [selectedLanguage, setSelectedLanguage] = useState<Language>(LANGUAGES[0])
   const [code, setCode] = useState<string>(DEFAULT_CODE.python)
   const [output, setOutput] = useState<string>('')
+  const [stdin, setStdin] = useState<string>('')
   const [isRunning, setIsRunning] = useState(false)
   const [showLanguages, setShowLanguages] = useState(false)
 
@@ -62,6 +63,7 @@ export default function Compiler() {
               content: code,
             },
           ],
+          stdin: stdin,
         }),
       })
 
@@ -180,8 +182,8 @@ export default function Compiler() {
           </Button>
         </div>
 
-        {/* Code Editor and Output */}
-        <div className="flex-1 flex flex-col overflow-hidden w-full">
+        {/* Code Editor, Input and Output */}
+        <div className="flex-1 flex flex-col lg:flex-row overflow-hidden w-full">
           {/* Code Editor */}
           <div className="flex-1 flex flex-col min-h-75 sm:min-h-100 border-b lg:border-b-0 lg:border-r border-zinc-200 dark:border-zinc-700">
             <div className="bg-zinc-100 dark:bg-zinc-800 px-3 sm:px-4 py-2 border-b border-zinc-200 dark:border-zinc-700">
@@ -223,17 +225,38 @@ export default function Compiler() {
             </div>
           </div>
 
-          {/* Output Panel */}
-          <div className="flex-1 flex flex-col min-h-62.5 sm:min-h-75">
-            <div className="bg-zinc-100 dark:bg-zinc-800 px-3 sm:px-4 py-2 border-b border-zinc-200 dark:border-zinc-700">
-              <span className="text-xs sm:text-sm font-heading font-semibold text-zinc-600 dark:text-zinc-400">
-                Output
-              </span>
+          {/* Input and Output Container */}
+          <div className="flex-1 flex flex-col lg:flex-row overflow-hidden">
+            {/* Input Panel */}
+            <div className="flex-1 flex flex-col min-h-50 sm:min-h-62.5 border-b lg:border-b-0 lg:border-r border-zinc-200 dark:border-zinc-700">
+              <div className="bg-zinc-100 dark:bg-zinc-800 px-3 sm:px-4 py-2 border-b border-zinc-200 dark:border-zinc-700 flex items-center justify-between">
+                <span className="text-xs sm:text-sm font-heading font-semibold text-zinc-600 dark:text-zinc-400">
+                  Input (stdin)
+                </span>
+                <span className="text-xs text-zinc-500 dark:text-zinc-500">
+                  {stdin.split('\n').filter(l => l.length > 0).length} input{stdin.split('\n').filter(l => l.length > 0).length !== 1 ? 's' : ''}
+                </span>
+              </div>
+              <textarea
+                value={stdin}
+                onChange={(e) => setStdin(e.target.value)}
+                placeholder="Enter your inputs here...\n(each line will be a separate input)\n\nExample for Python input():&nbsp;\nJohn\n25"
+                className="flex-1 p-3 sm:p-4 bg-white dark:bg-zinc-800 text-zinc-800 dark:text-zinc-100 font-mono text-xs sm:text-sm resize-none focus:outline-none focus:ring-1 focus:ring-blue-500 dark:focus:ring-blue-400 border-0"
+              />
             </div>
-            <div className="flex-1 p-3 sm:p-4 bg-zinc-50 dark:bg-zinc-900 overflow-y-auto">
-              <pre className="text-xs sm:text-sm font-mono text-zinc-800 dark:text-zinc-100 whitespace-pre-wrap wrap-break-word">
-                {output || 'Click "Run Code" to see output...'}
-              </pre>
+
+            {/* Output Panel */}
+            <div className="flex-1 flex flex-col min-h-50 sm:min-h-62.5">
+              <div className="bg-zinc-100 dark:bg-zinc-800 px-3 sm:px-4 py-2 border-b border-zinc-200 dark:border-zinc-700">
+                <span className="text-xs sm:text-sm font-heading font-semibold text-zinc-600 dark:text-zinc-400">
+                  Output
+                </span>
+              </div>
+              <div className="flex-1 p-3 sm:p-4 bg-zinc-50 dark:bg-zinc-900 overflow-y-auto">
+                <pre className="text-xs sm:text-sm font-mono text-zinc-800 dark:text-zinc-100 whitespace-pre-wrap wrap-break-word">
+                  {output || 'Click "Run Code" to see output...'}
+                </pre>
+              </div>
             </div>
           </div>
         </div>
