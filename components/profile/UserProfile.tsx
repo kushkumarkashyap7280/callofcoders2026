@@ -2,8 +2,8 @@
 
 import React, { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { useAuth } from '@/components/AuthProvider'
-import ProfileContent from '@/components/ProfileContent'
+import { useAuth } from '@/components/auth/AuthProvider'
+import ProfileContent from '@/components/profile/ProfileContent'
 
 export default function UserProfile() {
   const router = useRouter()
