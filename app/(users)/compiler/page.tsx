@@ -1,12 +1,28 @@
+'use client'
+
 import type { Metadata } from "next";
 import Compiler from '@/components/Compiler';
-
-export const metadata: Metadata = {
-  title: "Online Code Compiler - Run Python, JavaScript, Java, C++, TypeScript | CallOfCoders",
-  description: "Free online code compiler by Kush Kumar. Compile and run code in Python, JavaScript, TypeScript, Java, C++, Go, Rust, PHP, Ruby. Real-time code execution with syntax highlighting. Perfect for learning, testing, and debugging code.",
-  keywords: ["online compiler", "code editor", "Python compiler", "JavaScript compiler", "Java compiler", "C++ compiler", "TypeScript compiler", "run code online", "code execution", "programming IDE"],
-};
+import MobileCompiler from '@/components/MobileCompiler';
+import { useState, useEffect } from 'react';
 
 export default function CompilerPage() {
-  return <Compiler />;
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    // Check if window width is less than 768px (md breakpoint)
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    // Check on mount
+    checkMobile();
+
+    // Add event listener for window resize
+    window.addEventListener('resize', checkMobile);
+
+    // Cleanup
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  return isMobile ? <MobileCompiler /> : <Compiler />;
 }
