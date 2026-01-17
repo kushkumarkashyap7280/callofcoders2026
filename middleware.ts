@@ -21,6 +21,7 @@ export async function middleware(request: NextRequest) {
     '/about',
     '/courses',
     '/compiler',
+    '/blogs',
     '/api/auth/login',
     '/api/auth/signup',
     '/api/auth/google',
