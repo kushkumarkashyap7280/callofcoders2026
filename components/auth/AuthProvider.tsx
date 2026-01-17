@@ -71,15 +71,14 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
 }, []) // Empty dependency array = runs once on mount
 
   useEffect(() => {
-    console.log("Auth State Updated:", authstate);
+ 
     if (authstate.isAuthenticated) {
       console.log("Authenticated User:", authstate.user);
 
       if(authstate.isAdmin) {
-        console.log("User has admin privileges.");
         router.push('/admin');
       }else{
-        console.log("User is not an admin.");
+      
         if (authstate.user.username) {
           router.push(`/${authstate.user.username}`);
         } else {

@@ -101,9 +101,13 @@ export const config = {
      * Match all request paths except for the ones starting with:
      * - _next/static (static files)
      * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
-     * - public folder files
+     * - favicon.ico, favicon.svg (favicon files)
+     * - icon (Next.js icon route handler)
+     * - apple-icon (Next.js apple icon route handler)
+     * - manifest.json (PWA manifest)
+     * - robots.txt, sitemap.xml (SEO files)
+     * - public folder files (images, etc.)
      */
-    '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
+    '/((?!_next/static|_next/image|favicon|icon|apple-icon|manifest.json|robots.txt|sitemap.xml|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico)$).*)',
   ],
 }
