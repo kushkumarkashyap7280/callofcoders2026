@@ -2,7 +2,7 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import * as jwt from "jsonwebtoken";
 import { getJwtSecret } from "@/config/env";
-import ProfileSettings from "@/components/ProfileSettings";
+import ProfileSettings from "@/components/profile/ProfileSettings";
 
 interface SettingsPageProps {
   params: Promise<{

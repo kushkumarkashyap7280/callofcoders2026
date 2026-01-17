@@ -54,7 +54,7 @@ export default function AboutMe() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-zinc-900 dark:via-zinc-800 dark:to-zinc-900">
+    <div className="min-h-screen bg-linear-to-br from-blue-50 via-white to-purple-50 dark:from-zinc-900 dark:via-zinc-800 dark:to-zinc-900">
       <div className="container mx-auto px-4 py-16 max-w-6xl">
         <motion.div
           variants={containerVariants}
@@ -71,15 +71,15 @@ export default function AboutMe() {
               className="inline-block"
             >
               <div className="relative">
-                <div className="absolute inset-0 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-full blur-2xl opacity-50 animate-pulse" />
-                <div className="relative w-32 h-32 bg-gradient-to-br from-blue-500 via-purple-600 to-pink-500 rounded-full flex items-center justify-center mx-auto shadow-2xl">
+                <div className="absolute inset-0 bg-linear-to-r from-blue-500 via-purple-500 to-pink-500 rounded-full blur-2xl opacity-50 animate-pulse" />
+                <div className="relative w-32 h-32 bg-linear-to-br from-blue-500 via-purple-600 to-pink-500 rounded-full flex items-center justify-center mx-auto shadow-2xl">
                   <span className="text-5xl font-bold text-white">KK</span>
                 </div>
               </div>
             </motion.div>
 
             <div className="space-y-4">
-              <h1 className="text-5xl md:text-7xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 dark:from-blue-400 dark:via-purple-400 dark:to-pink-400 bg-clip-text text-transparent">
+              <h1 className="text-5xl md:text-7xl font-bold bg-linear-to-r from-blue-600 via-purple-600 to-pink-600 dark:from-blue-400 dark:via-purple-400 dark:to-pink-400 bg-clip-text text-transparent">
                 Kush Kumar
               </h1>
               <div className="flex items-center justify-center gap-2">
@@ -105,7 +105,7 @@ export default function AboutMe() {
                 href="https://github.com/kushkumar"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="p-3 bg-zinc-100 dark:bg-zinc-800 rounded-full hover:bg-gradient-to-r hover:from-blue-500 hover:to-purple-500 hover:text-white transition-all shadow-lg"
+                className="p-3 bg-zinc-100 dark:bg-zinc-800 rounded-full hover:bg-linear-to-r hover:from-blue-500 hover:to-purple-500 hover:text-white transition-all shadow-lg"
               >
                 <Github className="w-5 h-5" />
               </motion.a>
@@ -115,7 +115,7 @@ export default function AboutMe() {
                 href="https://linkedin.com/in/kushkumar"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="p-3 bg-zinc-100 dark:bg-zinc-800 rounded-full hover:bg-gradient-to-r hover:from-blue-500 hover:to-purple-500 hover:text-white transition-all shadow-lg"
+                className="p-3 bg-zinc-100 dark:bg-zinc-800 rounded-full hover:bg-linear-to-r hover:from-blue-500 hover:to-purple-500 hover:text-white transition-all shadow-lg"
               >
                 <Linkedin className="w-5 h-5" />
               </motion.a>
@@ -123,7 +123,7 @@ export default function AboutMe() {
                 whileHover={{ scale: 1.1, rotate: 5 }}
                 whileTap={{ scale: 0.95 }}
                 href="mailto:kushkumar.officialsoftwaredev@gmail.com"
-                className="p-3 bg-zinc-100 dark:bg-zinc-800 rounded-full hover:bg-gradient-to-r hover:from-blue-500 hover:to-purple-500 hover:text-white transition-all shadow-lg"
+                className="p-3 bg-zinc-100 dark:bg-zinc-800 rounded-full hover:bg-linear-to-r hover:from-blue-500 hover:to-purple-500 hover:text-white transition-all shadow-lg"
               >
                 <Mail className="w-5 h-5" />
               </motion.a>
@@ -133,7 +133,7 @@ export default function AboutMe() {
           {/* About Section */}
           <motion.div variants={itemVariants} className="bg-white/70 dark:bg-zinc-800/70 backdrop-blur-xl rounded-3xl p-8 shadow-2xl border border-white/20 dark:border-zinc-700/50">
             <div className="flex items-center gap-3 mb-6">
-              <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center">
+              <div className="w-12 h-12 bg-linear-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center">
                 <GraduationCap className="w-6 h-6 text-white" />
               </div>
               <h2 className="text-3xl font-bold text-zinc-800 dark:text-zinc-100">About Me</h2>
@@ -148,7 +148,7 @@ export default function AboutMe() {
           {/* Skills Section */}
           <motion.div variants={itemVariants}>
             <div className="flex items-center gap-3 mb-8">
-              <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-600 rounded-xl flex items-center justify-center">
+              <div className="w-12 h-12 bg-linear-to-br from-purple-500 to-pink-600 rounded-xl flex items-center justify-center">
                 <Award className="w-6 h-6 text-white" />
               </div>
               <h2 className="text-3xl font-bold text-zinc-800 dark:text-zinc-100">Skills & Technologies</h2>
@@ -164,7 +164,7 @@ export default function AboutMe() {
                   className="group"
                 >
                   <div className="relative overflow-hidden bg-white dark:bg-zinc-800 rounded-2xl p-4 shadow-lg border border-zinc-200 dark:border-zinc-700 hover:shadow-2xl transition-all">
-                    <div className={`absolute inset-0 bg-gradient-to-r ${skill.color} opacity-0 group-hover:opacity-10 transition-opacity`} />
+                    <div className={`absolute inset-0 bg-linear-to-r ${skill.color} opacity-0 group-hover:opacity-10 transition-opacity`} />
                     <p className="relative text-center font-semibold text-zinc-800 dark:text-zinc-100">
                       {skill.name}
                     </p>
@@ -177,7 +177,7 @@ export default function AboutMe() {
           {/* Experience Section */}
           <motion.div variants={itemVariants}>
             <div className="flex items-center gap-3 mb-8">
-              <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-blue-600 rounded-xl flex items-center justify-center">
+              <div className="w-12 h-12 bg-linear-to-br from-green-500 to-blue-600 rounded-xl flex items-center justify-center">
                 <Briefcase className="w-6 h-6 text-white" />
               </div>
               <h2 className="text-3xl font-bold text-zinc-800 dark:text-zinc-100">Experience</h2>
@@ -192,7 +192,7 @@ export default function AboutMe() {
                     className="bg-white/70 dark:bg-zinc-800/70 backdrop-blur-xl rounded-2xl p-6 shadow-xl border border-white/20 dark:border-zinc-700/50"
                   >
                     <div className="flex items-start gap-4">
-                      <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center shrink-0">
+                      <div className="w-12 h-12 bg-linear-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center shrink-0">
                         <Icon className="w-6 h-6 text-white" />
                       </div>
                       <div className="flex-1">
@@ -211,7 +211,7 @@ export default function AboutMe() {
           {/* CTA Section */}
           <motion.div
             variants={itemVariants}
-            className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 rounded-3xl p-8 text-center text-white shadow-2xl"
+            className="bg-linear-to-r from-blue-600 via-purple-600 to-pink-600 rounded-3xl p-8 text-center text-white shadow-2xl"
           >
             <h2 className="text-3xl font-bold mb-4">Let's Build Something Amazing Together!</h2>
             <p className="text-lg mb-6 text-white/90">

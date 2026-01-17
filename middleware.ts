@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
-import * as jwt from 'jsonwebtoken'
+import { jwtVerify } from 'jose'
 import { getJwtSecret } from '@/config/env'
 
 interface JWTPayload {
@@ -10,13 +10,17 @@ interface JWTPayload {
   isAdmin: boolean
 }
 
-export function middleware(request: NextRequest) {
+export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
   
   // Public routes - accessible to everyone
+  // Note: Exact matches only, no '/' to avoid the "Open Door" bug
   const publicRoutes = [
-    '/',
+    '/login',
     '/signup',
+    '/about',
+    '/courses',
+    '/compiler',
     '/api/auth/login',
     '/api/auth/signup',
     '/api/auth/google',
@@ -30,7 +34,16 @@ export function middleware(request: NextRequest) {
   const adminRoutes = ['/admin']
 
   // Check if the current path is public
-  const isPublicRoute = publicRoutes.some(route => pathname === route || pathname.startsWith(route))
+  // For exact homepage match
+  if (pathname === '/') {
+    return NextResponse.next()
+  }
+  
+  // Check other public routes with proper path matching
+  const isPublicRoute = publicRoutes.some(route => {
+    // Exact match or starts with route followed by a slash
+    return pathname === route || pathname.startsWith(route + '/')
+  })
   
   if (isPublicRoute) {
     return NextResponse.next()
@@ -47,11 +60,13 @@ export function middleware(request: NextRequest) {
   }
 
   try {
-    // Verify and decode the JWT token
-    const decoded = jwt.verify(token.value, getJwtSecret()) as JWTPayload
+    // Verify and decode the JWT token using jose (Edge Runtime compatible)
+    const secret = new TextEncoder().encode(getJwtSecret())
+    const { payload } = await jwtVerify(token.value, secret)
+    const decoded = payload as unknown as JWTPayload
 
     // Check if trying to access admin routes
-    const isAdminRoute = adminRoutes.some(route => pathname === route || pathname.startsWith(route))
+    const isAdminRoute = adminRoutes.some(route => pathname === route || pathname.startsWith(route + '/'))
     
     if (isAdminRoute && !decoded.isAdmin) {
       // Non-admin trying to access admin routes - redirect to home

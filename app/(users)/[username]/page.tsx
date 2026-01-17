@@ -2,9 +2,9 @@ import { redirect } from "next/navigation";
 import { Metadata } from "next";
 import { cookies } from "next/headers";
 import jwt from "jsonwebtoken";
-import ProfileContent from "@/components/ProfileContent";
-import PublicProfileView from "@/components/PublicProfileView";
-import { ProfilePageClient } from "@/components/ProfilePageClient";
+import ProfileContent from "@/components/profile/ProfileContent";
+import PublicProfileView from "@/components/profile/PublicProfileView";
+import { ProfilePageClient } from "@/components/profile/ProfilePageClient";
 import prisma from "@/lib/prisma";
 import { getAccessTokenSecret } from "@/config/env";
 

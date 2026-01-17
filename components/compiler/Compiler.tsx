@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { Button } from './ui/button'
+import { Button } from '../ui/button'
 import { Play, Loader2, ChevronDown, Code2, Terminal, Eye } from 'lucide-react'
 import CodeMirror from '@uiw/react-codemirror'
 import { python } from '@codemirror/lang-python'

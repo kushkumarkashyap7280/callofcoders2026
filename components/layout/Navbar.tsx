@@ -3,9 +3,9 @@
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { ThemeToggle } from './ThemeToggle'
-import { Button } from './ui/button'
+import { Button } from '../ui/button'
 import { Code2, LogOut, User, Menu, X, Sparkles } from 'lucide-react'
-import { useAuth } from './AuthProvider'
+import { useAuth } from '../auth/AuthProvider'
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { createNavLinks } from '@/constants'
@@ -122,7 +122,7 @@ export default function Navbar() {
                         )}
                       </div>
                       <span className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
-                        {user.email.split('@')[0]}
+                        {user.username}
                       </span>
                       {isAdmin && (
                         <span className="px-2 py-0.5 text-[10px] font-semibold bg-linear-to-r from-amber-500 to-orange-500 text-white rounded-full">

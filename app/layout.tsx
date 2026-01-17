@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
 import { Inter, JetBrains_Mono, Poppins } from "next/font/google";
 import "./globals.css";
-import AuthProvider from "@/components/AuthProvider";
-import AdminLogin from "@/components/AdminLogin";
-import { ThemeProvider } from "@/components/ThemeProvider";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
+import AuthProvider from "@/components/auth/AuthProvider";
+import AdminLogin from "@/components/admin/AdminLogin";
+import { ThemeProvider } from "@/components/layout/ThemeProvider";
+import Navbar from "@/components/layout/Navbar";
+import Footer from "@/components/layout/Footer";
 import { Toaster } from "@/components/ui/sonner";
 
 const inter = Inter({

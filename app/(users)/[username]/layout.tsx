@@ -1,9 +1,9 @@
 'use client'
 
 import React, { useState } from 'react'
-import ProfileSidebar from '@/components/ProfileSidebar'
+import ProfileSidebar from '@/components/profile/ProfileSidebar'
 import { Menu } from 'lucide-react'
-import { useAuth } from '@/components/AuthProvider'
+import { useAuth } from '@/components/auth/AuthProvider'
 
 export default function UsernameProfileLayout({
   children,

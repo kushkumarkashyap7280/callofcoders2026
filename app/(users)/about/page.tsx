@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import AboutMe from "@/components/AboutMe";
+import AboutMe from "@/components/about/AboutMe";
 
 export const metadata: Metadata = {
   title: "About Kush Kumar - Full Stack Developer | CallOfCoders",

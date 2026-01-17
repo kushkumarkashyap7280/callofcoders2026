@@ -40,7 +40,7 @@ export default function AuthNotification({ user, onClose }: AuthNotificationProp
           transition={{ duration: 0.3, ease: "easeOut" }}
           className="fixed top-4 left-1/2 -translate-x-1/2 z-50 max-w-md w-full mx-4"
         >
-          <div className="bg-gradient-to-r from-green-500 to-emerald-600 text-white px-6 py-4 rounded-xl shadow-2xl border border-green-400/20 backdrop-blur-sm">
+          <div className="bg-linear-to-r from-green-500 to-emerald-600 text-white px-6 py-4 rounded-xl shadow-2xl border border-green-400/20 backdrop-blur-sm">
             <div className="flex items-start gap-3">
               <motion.div
                 initial={{ scale: 0 }}

@@ -1,8 +1,8 @@
 'use client'
 
 import type { Metadata } from "next";
-import Compiler from '@/components/Compiler';
-import MobileCompiler from '@/components/MobileCompiler';
+import Compiler from '@/components/compiler/Compiler';
+import MobileCompiler from '@/components/compiler/MobileCompiler';
 import { useState, useEffect } from 'react';
 
 export default function CompilerPage() {

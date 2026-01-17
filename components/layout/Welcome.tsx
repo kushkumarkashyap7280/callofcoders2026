@@ -1,7 +1,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { Button } from './ui/button'
+import { Button } from '../ui/button'
 import { useRouter } from 'next/navigation'
 import { useMemo, useState, useEffect } from 'react'
 

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Welcome from "@/components/Welcome";
+import Welcome from "@/components/layout/Welcome";
 
 export const metadata: Metadata = {
   title: "CallOfCoders - Learn Programming, Code Online & Connect with Developers | Kush Kumar",
