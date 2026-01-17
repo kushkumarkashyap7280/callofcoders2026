@@ -9,6 +9,7 @@ export const createNavLinks = (isAuthenticated: boolean, isAdmin: boolean, usern
   { href: '/about', label: 'About', show: true },
   { href: '/courses', label: 'Courses', show: true },
   { href: '/compiler', label: 'Compiler', show: true },
+  { href: '/blogs', label: 'Blogs', show: true },
   { href: username ? `/${username}` : '/login', label: 'Profile', show: isAuthenticated && !isAdmin },
   { href: '/admin', label: 'Admin', show: isAdmin },
 ]

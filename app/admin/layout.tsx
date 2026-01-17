@@ -2,10 +2,10 @@
 
 
 import type { Metadata } from "next";
-import AdminSidebar from '@/components/AdminSidebar'
+import AdminSidebar from '@/components/admin/AdminSidebar'
 import { useEffect, useState } from 'react'
 import { Menu } from 'lucide-react'
-import { useAuth } from "@/components/AuthProvider"
+import { useAuth } from "@/components/auth/AuthProvider"
 import { useRouter } from 'next/navigation'
 
 export default function AdminLayout({
