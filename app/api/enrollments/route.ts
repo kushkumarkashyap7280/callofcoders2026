@@ -7,7 +7,7 @@ import { getJwtSecret } from '@/config/env';
 export async function POST(request: NextRequest) {
   try {
     // Verify user is authenticated
-    const token = request.cookies.get('token')?.value;
+    const token = request.cookies.get('auth-token')?.value;
     
     if (!token) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -81,7 +81,7 @@ export async function POST(request: NextRequest) {
 // GET - Get user's enrollments
 export async function GET(request: NextRequest) {
   try {
-    const token = request.cookies.get('token')?.value;
+    const token = request.cookies.get('auth-token')?.value;
     
     if (!token) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });

@@ -10,7 +10,7 @@ export async function GET(
 ) {
   try {
     const { courseId } = await params;
-    const token = request.cookies.get('token')?.value;
+    const token = request.cookies.get('auth-token')?.value;
     
     if (!token) {
       return NextResponse.json({ enrolled: false, enrollment: null });
@@ -37,9 +37,19 @@ export async function GET(
       },
     });
 
+    if (!enrollment) {
+      return NextResponse.json({ 
+        enrolled: false, 
+        enrollment: null,
+        completedLessons: []
+      });
+    }
+
     return NextResponse.json({
-      enrolled: !!enrollment,
+      enrolled: true,
       enrollment,
+      progress: enrollment.progress,
+      completedLessons: enrollment.lessonCompletions.map(lc => lc.lessonId),
     });
   } catch (error) {
     console.error('Error checking enrollment:', error);
@@ -54,7 +64,7 @@ export async function DELETE(
 ) {
   try {
     const { courseId } = await params;
-    const token = request.cookies.get('token')?.value;
+    const token = request.cookies.get('auth-token')?.value;
     
     if (!token) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });

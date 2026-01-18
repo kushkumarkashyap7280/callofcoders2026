@@ -32,7 +32,10 @@ export async function middleware(request: NextRequest) {
     '/api/auth/verify-otp',
     '/api/auth/complete-signup',
     '/api/send-otp',
-    '/api/auth/verify'
+    '/api/auth/verify',
+    '/api/enrollments',
+    '/api/enrollments/[courseId]'
+    
   ]
 
   // Admin-only routes

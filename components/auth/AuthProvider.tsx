@@ -70,24 +70,24 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
     })
 }, []) // Empty dependency array = runs once on mount
 
-  useEffect(() => {
+  // useEffect(() => {
  
-    if (authstate.isAuthenticated) {
-      console.log("Authenticated User:", authstate.user);
+  //   if (authstate.isAuthenticated) {
+  //     console.log("Authenticated User:", authstate.user);
 
-      if(authstate.isAdmin) {
-        router.push('/admin');
-      }else{
+  //     if(authstate.isAdmin) {
+  //       router.push('/admin');
+  //     }else{
       
-        if (authstate.user.username) {
-          router.push(`/${authstate.user.username}`);
-        } else {
-          router.push('/');
-        }
-      }
-    }
+  //       if (authstate.user.username) {
+  //         router.push(`/${authstate.user.username}`);
+  //       } else {
+  //         router.push('/');
+  //       }
+  //     }
+  //   }
     
-  }, [authstate]);
+  // }, [authstate]);
 
   return (
     <AuthContex.Provider value={{authState: authstate, setAuthState}}>
