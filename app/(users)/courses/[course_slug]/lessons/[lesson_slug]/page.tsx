@@ -1,100 +1,117 @@
-import Link from 'next/link'
+'use client';
+
+import Link from 'next/link';
+import { useEffect, useState } from 'react';
+import { MDXRemote, MDXRemoteSerializeResult } from 'next-mdx-remote';
+import { serialize } from 'next-mdx-remote/serialize';
+import CodeBlock from '@/components/blog/CodeBlock';
+import CustomLink from '@/components/blog/CustomLink';
+import CustomList from '@/components/blog/CustomList';
+import BlogImage from '@/components/blog/BlogImage';
+
+const components = {
+  code: CodeBlock,
+  a: CustomLink,
+  ul: CustomList,
+  ol: CustomList,
+  CustomLink,
+  CustomList,
+  BlogImage,
+};
+
+interface Lesson {
+  id: string;
+  slug: string;
+  title: string;
+  sequenceNo: number;
+  content: string;
+  courseId: string;
+  course: {
+    id: string;
+    title: string;
+    slug: string;
+  };
+}
+
+interface NavigationLesson {
+  id: string;
+  slug: string;
+  title: string;
+  sequenceNo: number;
+}
 
 export default function LessonPage({ 
   params 
 }: { 
-  params: { course_slug: string; lesson_slug: string } 
+  params: Promise<{ course_slug: string; lesson_slug: string }> 
 }) {
-  // TODO: Fetch lesson details from API using params.course_slug and params.lesson_slug
-  // const lesson = await prisma.lesson.findFirst({
-  //   where: {
-  //     slug: params.lesson_slug,
-  //     course: { slug: params.course_slug },
-  //   },
-  //   include: { course: true },
-  // })
-  // const allLessons = await prisma.lesson.findMany({
-  //   where: { courseId: lesson.courseId },
-  //   orderBy: { sequenceNo: 'asc' },
-  // })
+  const [courseSlug, setCourseSlug] = useState<string>('');
+  const [lessonSlug, setLessonSlug] = useState<string>('');
+  const [lesson, setLesson] = useState<Lesson | null>(null);
+  const [navigation, setNavigation] = useState<{
+    previous: NavigationLesson | null;
+    next: NavigationLesson | null;
+  }>({ previous: null, next: null });
+  const [allLessons, setAllLessons] = useState<NavigationLesson[]>([]);
+  const [mdxSource, setMdxSource] = useState<MDXRemoteSerializeResult | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  const lesson = {
-    id: '1',
-    slug: params.lesson_slug,
-    title: 'Introduction to JavaScript',
-    description: 'Learn the basics of JavaScript programming language and set up your development environment.',
-    sequenceNo: 1,
-    content: `
-      <h2>What is JavaScript?</h2>
-      <p>JavaScript is a versatile programming language that runs in web browsers and on servers. 
-      It's one of the core technologies of the web, alongside HTML and CSS.</p>
-      
-      <h3>Why Learn JavaScript?</h3>
-      <ul>
-        <li>Used in both frontend and backend development</li>
-        <li>Large and active community</li>
-        <li>Extensive ecosystem of libraries and frameworks</li>
-        <li>High demand in the job market</li>
-      </ul>
+  useEffect(() => {
+    params.then(({ course_slug, lesson_slug }) => {
+      setCourseSlug(course_slug);
+      setLessonSlug(lesson_slug);
+      fetchLesson(course_slug, lesson_slug);
+    });
+  }, [params]);
 
-      <h3>Key Concepts</h3>
-      <p>In this lesson, we'll cover:</p>
-      <ul>
-        <li>History of JavaScript</li>
-        <li>JavaScript in the browser</li>
-        <li>JavaScript on the server (Node.js)</li>
-        <li>Setting up your development environment</li>
-      </ul>
-    `,
-    courseId: '1',
-    createdAt: new Date(),
-    updatedAt: new Date(),
+  useEffect(() => {
+    if (lesson) {
+      compileMDX(lesson.content);
+    }
+  }, [lesson]);
+
+  const compileMDX = async (content: string) => {
+    try {
+      const serialized = await serialize(content || '');
+      setMdxSource(serialized);
+    } catch (err) {
+      console.error('MDX compilation error:', err);
+    }
+  };
+
+  const fetchLesson = async (course_slug: string, lesson_slug: string) => {
+    try {
+      const response = await fetch(`/api/courses/slug/${course_slug}/lessons/${lesson_slug}`);
+      if (!response.ok) throw new Error('Failed to fetch lesson');
+      const data = await response.json();
+      setLesson(data.lesson);
+      setNavigation(data.navigation);
+      setAllLessons(data.allLessons);
+    } catch (error) {
+      console.error('Error fetching lesson:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <p className="text-zinc-600 dark:text-zinc-400">Loading lesson...</p>
+      </div>
+    );
   }
 
-  const course = {
-    id: '1',
-    slug: params.course_slug,
-    title: 'JavaScript Fundamentals',
+  if (!lesson) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <p className="text-zinc-600 dark:text-zinc-400">Lesson not found</p>
+      </div>
+    );
   }
 
-  // User's enrollment - tracks progress
-  const userEnrollment: {
-    id: string
-    userId: string
-    courseId: string
-    enrolledAt: Date
-    lastAccessedAt: Date
-    currentLessonId: string
-    isCompleted: boolean
-  } | null = {
-    id: 'enrollment-1',
-    userId: 'user-1',
-    courseId: '1',
-    enrolledAt: new Date('2026-01-10'),
-    lastAccessedAt: new Date('2026-01-14'),
-    currentLessonId: '1',
-    isCompleted: false,
-  } // TODO: Fetch from API
-
-  const allLessons = [lesson] // TODO: Fetch all lessons for progress calculation
-  const currentLessonIndex = userEnrollment?.currentLessonId 
-    ? allLessons.findIndex(l => l.id === userEnrollment.currentLessonId)
-    : 0
-  const progressPercentage = allLessons.length > 0 
-    ? ((currentLessonIndex + 1) / allLessons.length) * 100 
-    : 0
-
-  // Navigation between lessons (TODO: fetch from API based on sequenceNo)
-  const navigation: {
-    previous: { slug: string; title: string } | null
-    next: { slug: string; title: string } | null
-  } = {
-    previous: null,
-    next: {
-      slug: 'variables-and-data-types',
-      title: 'Variables and Data Types',
-    },
-  }
+  const currentIndex = allLessons.findIndex(l => l.id === lesson.id);
+  const progressPercentage = allLessons.length > 0 ? ((currentIndex + 1) / allLessons.length) * 100 : 0;
 
   return (
     <div className="min-h-screen bg-zinc-50 dark:bg-zinc-900">
@@ -104,7 +121,7 @@ export default function LessonPage({
           <div className="flex items-center gap-3 text-zinc-600 dark:text-zinc-400">
             <span className="text-sm font-medium">Lesson {lesson.sequenceNo}</span>
             <span className="text-zinc-300 dark:text-zinc-600">•</span>
-            <span className="text-sm">{course.title}</span>
+            <span className="text-sm">{lesson.course.title}</span>
           </div>
         </div>
       </div>
@@ -121,14 +138,14 @@ export default function LessonPage({
               </Link>
               <span className="mx-2">/</span>
               <Link 
-                href={`/courses/${course.slug}`}
+                href={`/courses/${lesson.course.slug}`}
                 className="hover:text-blue-600 dark:hover:text-blue-400"
               >
-                {course.title}
+                {lesson.course.title}
               </Link>
               <span className="mx-2">/</span>
               <Link 
-                href={`/courses/${course.slug}/lessons`}
+                href={`/courses/${lesson.course.slug}/lessons`}
                 className="hover:text-blue-600 dark:hover:text-blue-400"
               >
                 Lessons
@@ -142,9 +159,6 @@ export default function LessonPage({
                   <h1 className="text-2xl sm:text-3xl font-bold text-zinc-900 dark:text-zinc-100 mb-2">
                     {lesson.title}
                   </h1>
-                  <p className="text-zinc-600 dark:text-zinc-400">
-                    {lesson.description}
-                  </p>
                 </div>
                 <div className="shrink-0 ml-4">
                   <span className="inline-block px-3 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 text-sm font-medium rounded-full">
@@ -156,17 +170,20 @@ export default function LessonPage({
 
             {/* Lesson Content */}
             <div className="bg-white dark:bg-zinc-800 rounded-lg border border-zinc-200 dark:border-zinc-700 p-6">
-              <div 
-                className="prose prose-zinc dark:prose-invert max-w-none"
-                dangerouslySetInnerHTML={{ __html: lesson.content }}
-              />
+              {mdxSource ? (
+                <div className="prose prose-zinc dark:prose-invert max-w-none">
+                  <MDXRemote {...mdxSource} components={components} />
+                </div>
+              ) : (
+                <p className="text-zinc-600 dark:text-zinc-400">Loading content...</p>
+              )}
             </div>
 
             {/* Navigation Buttons */}
             <div className="flex flex-col sm:flex-row justify-between gap-4">
               {navigation.previous ? (
                 <Link
-                  href={`/courses/${course.slug}/lessons/${navigation.previous.slug}`}
+                  href={`/courses/${lesson.course.slug}/lessons/${navigation.previous.slug}`}
                   className="flex-1 group bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-lg p-4 hover:border-blue-500 dark:hover:border-blue-500 transition-all"
                 >
                   <div className="text-sm text-zinc-500 dark:text-zinc-400 mb-1">← Previous</div>
@@ -180,7 +197,7 @@ export default function LessonPage({
 
               {navigation.next ? (
                 <Link
-                  href={`/courses/${course.slug}/lessons/${navigation.next.slug}`}
+                  href={`/courses/${lesson.course.slug}/lessons/${navigation.next.slug}`}
                   className="flex-1 group bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-lg p-4 hover:border-blue-500 dark:hover:border-blue-500 transition-all text-right"
                 >
                   <div className="text-sm text-zinc-500 dark:text-zinc-400 mb-1">Next →</div>
@@ -199,58 +216,15 @@ export default function LessonPage({
             {/* Course Info */}
             <div className="bg-white dark:bg-zinc-800 rounded-lg border border-zinc-200 dark:border-zinc-700 p-6">
               <h3 className="font-semibold text-zinc-900 dark:text-zinc-100 mb-4">
-                Course Progress
+                Course Navigation
               </h3>
               <div className="space-y-4">
-                <div>
-                  <div className="flex justify-between text-sm mb-2">
-                    <span className="text-zinc-600 dark:text-zinc-400">Completed</span>
-                    <span className="text-zinc-900 dark:text-zinc-100 font-medium">
-                      {Math.round(progressPercentage)}%
-                    </span>
-                  </div>
-                  <div className="h-2 bg-zinc-200 dark:bg-zinc-700 rounded-full overflow-hidden">
-                    <div 
-                      className="h-full bg-blue-600 rounded-full transition-all"
-                      style={{ width: `${progressPercentage}%` }}
-                    />
-                  </div>
-                </div>
-                
-                {userEnrollment && (
-                  <>
-                    <button 
-                      className="w-full bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                      disabled={userEnrollment.currentLessonId === lesson.id}
-                      onClick={() => {
-                        // TODO: Update enrollment.currentLessonId to next lesson
-                        // TODO: Update enrollment.lastAccessedAt to now
-                        console.log('Mark lesson as complete and move to next')
-                      }}
-                    >
-                      {userEnrollment.currentLessonId === lesson.id ? '✓ Current Lesson' : 'Mark as Complete'}
-                    </button>
-                    
-                    {userEnrollment.isCompleted && (
-                      <div className="p-3 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg text-center">
-                        <span className="text-sm font-medium text-green-700 dark:text-green-400">🎉 Course Completed!</span>
-                      </div>
-                    )}
-                  </>
-                )}
-                
                 <Link
-                  href={`/courses/${course.slug}/lessons`}
+                  href={`/courses/${lesson.course.slug}/lessons`}
                   className="block w-full text-center bg-zinc-100 dark:bg-zinc-700 hover:bg-zinc-200 dark:hover:bg-zinc-600 text-zinc-900 dark:text-zinc-100 font-medium py-2 px-4 rounded-lg transition-colors"
                 >
                   View All Lessons
                 </Link>
-                
-                {userEnrollment?.enrolledAt && (
-                  <p className="text-xs text-zinc-500 dark:text-zinc-400 text-center">
-                    Enrolled: {new Date(userEnrollment.enrolledAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
-                  </p>
-                )}
               </div>
             </div>
 

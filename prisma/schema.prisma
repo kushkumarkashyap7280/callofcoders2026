@@ -15,11 +15,16 @@ model Course {
   id           String   @id @default(uuid())
   slug         String   @unique // e.g. "nextjs-mastery"
   title        String
-  description  String
+  description  String   @db.Text // Allow longer descriptions
   imageUrl     String?  @map("img_url") // Maps to your preferred column name
   externalLink String?  @map("external_link")
   tags         String[] // PostgreSQL natively supports arrays!
   isPublished  Boolean  @default(false)
+  isFeatured   Boolean  @default(false) @map("is_featured") // Featured courses
+  instructor   String?  // Instructor name
+  level        String?  @default("Beginner") // Beginner, Intermediate, Advanced
+  duration     String?  // e.g., "4 weeks", "10 hours"
+  price        Float?   @default(0) // For future paid courses (0 = free)
   
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
@@ -34,11 +39,17 @@ model Lesson {
   id          String   @id @default(uuid())
   slug        String   // e.g. "setup-environment"
   title       String   // Needed for the sidebar
+  description String?  // Short description for lesson overview
   sequenceNo  Int      @map("sequence_no")
   content     String   @db.Text // @db.Text is needed for long MDX strings
+  duration    String?  // e.g., "15 min", "30 min"
+  isPreview   Boolean  @default(false) @map("is_preview") // Free preview lessons
+  videoUrl    String?  @map("video_url") // Optional video URL
   
   courseId    String   @map("course_id")
   course      Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  
+  completions LessonCompletion[]
 
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
@@ -74,12 +85,28 @@ model Enrollment {
   lastAccessedAt  DateTime? @map("last_accessed_at")
   currentLessonId String?   @map("current_lesson_id") // Track progress
   isCompleted     Boolean   @default(false) @map("is_completed")
+  completedAt     DateTime? @map("completed_at") // When course was completed
+  progress        Int       @default(0) // Percentage (0-100)
   
   user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   course          Course    @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  lessonCompletions LessonCompletion[]
   
   @@unique([userId, courseId]) // A user can only enroll once per course
   @@map("enrollments")
+}
+
+model LessonCompletion {
+  id              String    @id @default(uuid())
+  enrollmentId    String    @map("enrollment_id")
+  lessonId        String    @map("lesson_id")
+  completedAt     DateTime  @default(now()) @map("completed_at")
+  
+  enrollment      Enrollment @relation(fields: [enrollmentId], references: [id], onDelete: Cascade)
+  lesson          Lesson     @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  
+  @@unique([enrollmentId, lessonId]) // Can't complete same lesson twice in same enrollment
+  @@map("lesson_completions")
 }
 
 model blogs {

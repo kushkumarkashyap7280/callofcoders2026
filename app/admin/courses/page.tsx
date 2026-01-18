@@ -2,50 +2,89 @@
 
 import Link from 'next/link'
 import { Plus, Edit, Trash2, Eye, EyeOff, BookOpen } from 'lucide-react'
+import { useEffect, useState } from 'react'
+
+interface Course {
+  id: string;
+  slug: string;
+  title: string;
+  description: string;
+  imageUrl: string | null;
+  externalLink: string | null;
+  tags: string[];
+  isPublished: boolean;
+  createdAt: string;
+  updatedAt: string;
+  _count: {
+    lessons: number;
+  };
+}
 
 export default function AdminCoursesPage() {
-  // TODO: Fetch from API - prisma.course.findMany({ include: { lessons, enrollments } })
-  const courses = [
-    {
-      id: '1',
-      slug: 'javascript-fundamentals',
-      title: 'JavaScript Fundamentals',
-      description: 'Learn the core concepts of JavaScript programming',
-      imageUrl: null,
-      externalLink: null,
-      tags: ['JavaScript', 'Beginner', 'Web Development'],
-      isPublished: true,
-      createdAt: new Date('2026-01-01'),
-      updatedAt: new Date('2026-01-15'),
-      _count: { lessons: 24, enrollments: 524 },
-    },
-    {
-      id: '2',
-      slug: 'react-complete-guide',
-      title: 'React Complete Guide',
-      description: 'Master React from basics to advanced concepts',
-      imageUrl: null,
-      externalLink: null,
-      tags: ['React', 'JavaScript', 'Frontend'],
-      isPublished: true,
-      createdAt: new Date('2025-12-15'),
-      updatedAt: new Date('2026-01-10'),
-      _count: { lessons: 36, enrollments: 432 },
-    },
-    {
-      id: '3',
-      slug: 'nextjs-fullstack',
-      title: 'Next.js Fullstack Development',
-      description: 'Build modern fullstack applications with Next.js',
-      imageUrl: null,
-      externalLink: null,
-      tags: ['Next.js', 'React', 'Fullstack'],
-      isPublished: false,
-      createdAt: new Date('2025-11-20'),
-      updatedAt: new Date('2026-01-12'),
-      _count: { lessons: 28, enrollments: 387 },
-    },
-  ]
+  const [courses, setCourses] = useState<Course[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchCourses();
+  }, []);
+
+  const fetchCourses = async () => {
+    try {
+      const response = await fetch('/api/courses');
+      const data = await response.json();
+      setCourses(data);
+    } catch (error) {
+      console.error('Error fetching courses:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDelete = async (id: string) => {
+    if (!confirm('Are you sure you want to delete this course?')) return;
+
+    try {
+      const response = await fetch(`/api/courses/${id}`, {
+        method: 'DELETE',
+      });
+
+      if (response.ok) {
+        fetchCourses();
+      }
+    } catch (error) {
+      console.error('Error deleting course:', error);
+    }
+  };
+
+  const handleTogglePublish = async (id: string, currentStatus: boolean) => {
+    try {
+      const course = courses.find(c => c.id === id);
+      if (!course) return;
+
+      const response = await fetch(`/api/courses/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          ...course,
+          isPublished: !currentStatus,
+        }),
+      });
+
+      if (response.ok) {
+        fetchCourses();
+      }
+    } catch (error) {
+      console.error('Error toggling publish status:', error);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-zinc-50 dark:bg-zinc-900 flex items-center justify-center">
+        <p className="text-zinc-600 dark:text-zinc-400">Loading courses...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-zinc-50 dark:bg-zinc-900">
@@ -91,112 +130,108 @@ export default function AdminCoursesPage() {
 
         {/* Courses List */}
         <div className="space-y-4">
-          {courses.map((course) => (
-            <div
-              key={course.id}
-              className="bg-white dark:bg-zinc-800 rounded-lg border border-zinc-200 dark:border-zinc-700 p-4 sm:p-6 hover:shadow-lg transition-all"
-            >
-              <div className="flex flex-col sm:flex-row gap-4">
-                {/* Course Image */}
-                <div className="w-full sm:w-32 h-32 shrink-0 bg-zinc-200 dark:bg-zinc-700 rounded-lg overflow-hidden flex items-center justify-center">
-                  {course.imageUrl ? (
-                    <img src={course.imageUrl} alt={course.title} className="w-full h-full object-cover" />
-                  ) : (
-                    <BookOpen className="w-12 h-12 text-zinc-400 dark:text-zinc-500" />
-                  )}
-                </div>
+          {courses.length === 0 ? (
+            <div className="bg-white dark:bg-zinc-800 rounded-lg border border-zinc-200 dark:border-zinc-700 p-12 text-center">
+              <p className="text-zinc-600 dark:text-zinc-400">No courses yet. Create your first course!</p>
+            </div>
+          ) : (
+            courses.map((course) => (
+              <div
+                key={course.id}
+                className="bg-white dark:bg-zinc-800 rounded-lg border border-zinc-200 dark:border-zinc-700 p-4 sm:p-6 hover:shadow-lg transition-all"
+              >
+                <div className="flex flex-col sm:flex-row gap-4">
+                  {/* Course Image */}
+                  <div className="w-full sm:w-32 h-32 shrink-0 bg-zinc-200 dark:bg-zinc-700 rounded-lg overflow-hidden flex items-center justify-center">
+                    {course.imageUrl ? (
+                      <img src={course.imageUrl} alt={course.title} className="w-full h-full object-cover" />
+                    ) : (
+                      <BookOpen className="w-12 h-12 text-zinc-400 dark:text-zinc-500" />
+                    )}
+                  </div>
 
-                {/* Course Info */}
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-start justify-between gap-4 mb-2">
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2 mb-1">
-                        <h2 className="text-xl font-semibold text-zinc-900 dark:text-zinc-100 truncate">
-                          {course.title}
-                        </h2>
-                        {course.isPublished ? (
-                          <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 text-xs font-medium rounded">
-                            <Eye className="w-3 h-3" />
-                            Published
-                          </span>
-                        ) : (
-                          <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 text-xs font-medium rounded">
-                            <EyeOff className="w-3 h-3" />
-                            Draft
-                          </span>
-                        )}
-                      </div>
-                      <p className="text-sm text-zinc-600 dark:text-zinc-400 line-clamp-2 mb-2">
-                        {course.description}
-                      </p>
-                      <div className="flex flex-wrap gap-1.5">
-                        {course.tags.map((tag) => (
-                          <span 
-                            key={tag}
-                            className="px-2 py-0.5 text-xs font-medium bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded"
-                          >
-                            {tag}
-                          </span>
-                        ))}
+                  {/* Course Info */}
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-start justify-between gap-4 mb-2">
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 mb-1">
+                          <h2 className="text-xl font-semibold text-zinc-900 dark:text-zinc-100 truncate">
+                            {course.title}
+                          </h2>
+                          {course.isPublished ? (
+                            <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 text-xs font-medium rounded">
+                              <Eye className="w-3 h-3" />
+                              Published
+                            </span>
+                          ) : (
+                            <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 text-xs font-medium rounded">
+                              <EyeOff className="w-3 h-3" />
+                              Draft
+                            </span>
+                          )}
+                        </div>
+                        <p className="text-sm text-zinc-600 dark:text-zinc-400 line-clamp-2 mb-2">
+                          {course.description}
+                        </p>
+                        <div className="flex flex-wrap gap-1.5">
+                          {course.tags.map((tag) => (
+                            <span 
+                              key={tag}
+                              className="px-2 py-0.5 text-xs font-medium bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded"
+                            >
+                              {tag}
+                            </span>
+                          ))}
+                        </div>
                       </div>
                     </div>
-                  </div>
 
-                  <div className="flex flex-wrap items-center gap-4 text-sm text-zinc-600 dark:text-zinc-400 mb-4">
-                    <span>{course._count.lessons} lessons</span>
-                    <span>•</span>
-                    <span>{course._count.enrollments} students</span>
-                    <span>•</span>
-                    <span>Updated {course.updatedAt.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>
-                  </div>
+                    <div className="flex flex-wrap items-center gap-4 text-sm text-zinc-600 dark:text-zinc-400 mb-4">
+                      <span>{course._count.lessons} lessons</span>
+                      <span>•</span>
+                      <span>Updated {new Date(course.updatedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>
+                    </div>
 
-                  {/* Actions */}
-                  <div className="flex flex-wrap gap-2">
-                    <Link
-                      href={`/admin/courses/${course.id}/lessons`}
-                      className="inline-flex items-center gap-2 px-3 py-1.5 bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-900/30 rounded-lg transition-colors text-sm font-medium"
-                    >
-                      <BookOpen className="w-4 h-4" />
-                      Manage Lessons
-                    </Link>
-                    <Link
-                      href={`/admin/courses/${course.id}/edit`}
-                      className="inline-flex items-center gap-2 px-3 py-1.5 bg-zinc-100 dark:bg-zinc-700 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-200 dark:hover:bg-zinc-600 rounded-lg transition-colors text-sm font-medium"
-                    >
-                      <Edit className="w-4 h-4" />
-                      Edit
-                    </Link>
-                    <button
-                      onClick={() => {
-                        // TODO: Toggle isPublished
-                        console.log('Toggle publish:', course.id)
-                      }}
-                      className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-lg transition-colors text-sm font-medium ${
-                        course.isPublished
-                          ? 'bg-amber-50 dark:bg-amber-900/20 text-amber-600 dark:text-amber-400 hover:bg-amber-100 dark:hover:bg-amber-900/30'
-                          : 'bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 hover:bg-green-100 dark:hover:bg-green-900/30'
-                      }`}
-                    >
-                      {course.isPublished ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                      {course.isPublished ? 'Unpublish' : 'Publish'}
-                    </button>
-                    <button
-                      onClick={() => {
-                        // TODO: Delete course
-                        if (confirm('Are you sure you want to delete this course?')) {
-                          console.log('Delete:', course.id)
-                        }
-                      }}
-                      className="inline-flex items-center gap-2 px-3 py-1.5 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-900/30 rounded-lg transition-colors text-sm font-medium"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                      Delete
-                    </button>
+                    {/* Actions */}
+                    <div className="flex flex-wrap gap-2">
+                      <Link
+                        href={`/admin/courses/${course.id}/lessons`}
+                        className="inline-flex items-center gap-2 px-3 py-1.5 bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-900/30 rounded-lg transition-colors text-sm font-medium"
+                      >
+                        <BookOpen className="w-4 h-4" />
+                        Manage Lessons
+                      </Link>
+                      <Link
+                        href={`/admin/courses/${course.id}/edit`}
+                        className="inline-flex items-center gap-2 px-3 py-1.5 bg-zinc-100 dark:bg-zinc-700 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-200 dark:hover:bg-zinc-600 rounded-lg transition-colors text-sm font-medium"
+                      >
+                        <Edit className="w-4 h-4" />
+                        Edit
+                      </Link>
+                      <button
+                        onClick={() => handleTogglePublish(course.id, course.isPublished)}
+                        className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-lg transition-colors text-sm font-medium ${
+                          course.isPublished
+                            ? 'bg-amber-50 dark:bg-amber-900/20 text-amber-600 dark:text-amber-400 hover:bg-amber-100 dark:hover:bg-amber-900/30'
+                            : 'bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 hover:bg-green-100 dark:hover:bg-green-900/30'
+                        }`}
+                      >
+                        {course.isPublished ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                        {course.isPublished ? 'Unpublish' : 'Publish'}
+                      </button>
+                      <button
+                        onClick={() => handleDelete(course.id)}
+                        className="inline-flex items-center gap-2 px-3 py-1.5 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-900/30 rounded-lg transition-colors text-sm font-medium"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                        Delete
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          ))}
+            ))
+          )}
         </div>
       </div>
     </div>

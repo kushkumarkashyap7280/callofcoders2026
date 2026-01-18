@@ -1,48 +1,139 @@
-import Link from 'next/link'
+'use client';
 
-export default function CoursePage({ params }: { params: { course_slug: string } }) {
-  // TODO: Fetch course details from API using params.course_slug
-  // const session = await getServerSession()
-  // const course = await prisma.course.findUnique({
-  //   where: { slug: params.course_slug },
-  //   include: {
-  //     lessons: { orderBy: { sequenceNo: 'asc' } },
-  //     enrollments: { select: { id: true } },
-  //   },
-  // })
-  // const userEnrollment = session?.user ? await prisma.enrollment.findUnique({
-  //   where: {
-  //     userId_courseId: {
-  //       userId: session.user.id,
-  //       courseId: course.id,
-  //     },
-  //   },
-  // }) : null
+import Link from 'next/link';
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { toast } from 'sonner';
+import { Loader2 } from 'lucide-react';
 
-  const course = {
-    id: '1',
-    slug: params.course_slug,
-    title: 'JavaScript Fundamentals',
-    description: 'Learn the core concepts of JavaScript programming from scratch. This comprehensive course covers everything you need to know to become proficient in JavaScript.',
-    imageUrl: null,
-    externalLink: null,
-    tags: ['JavaScript', 'Beginner', 'Web Development'],
-    isPublished: true,
-    createdAt: new Date('2026-01-01'),
-    updatedAt: new Date('2026-01-15'),
-    lessons: new Array(24),
-    enrollments: new Array(1234),
+interface Course {
+  id: string;
+  slug: string;
+  title: string;
+  description: string;
+  imageUrl: string | null;
+  externalLink: string | null;
+  tags: string[];
+  isPublished: boolean;
+  instructor: string | null;
+  level: string | null;
+  duration: string | null;
+  price: number | null;
+  createdAt: string;
+  updatedAt: string;
+  _count: {
+    lessons: number;
+    enrollments: number;
+  };
+}
+
+interface EnrollmentStatus {
+  enrolled: boolean;
+  enrollment: {
+    id: string;
+    enrolledAt: string;
+    progress: number;
+    isCompleted: boolean;
+  } | null;
+}
+
+export default function CoursePage({ params }: { params: Promise<{ course_slug: string }> }) {
+  const router = useRouter();
+  const [courseSlug, setCourseSlug] = useState<string>('');
+  const [course, setCourse] = useState<Course | null>(null);
+  const [enrollmentStatus, setEnrollmentStatus] = useState<EnrollmentStatus>({ enrolled: false, enrollment: null });
+  const [loading, setLoading] = useState(true);
+  const [enrolling, setEnrolling] = useState(false);
+
+  useEffect(() => {
+    params.then(({ course_slug }) => {
+      setCourseSlug(course_slug);
+      fetchCourse(course_slug);
+    });
+  }, [params]);
+
+  const fetchCourse = async (slug: string) => {
+    try {
+      const response = await fetch(`/api/courses/slug/${slug}`);
+      if (!response.ok) {
+        if (response.status === 404) {
+          router.push('/courses');
+          return;
+        }
+        throw new Error('Failed to fetch course');
+      }
+      const data = await response.json();
+      setCourse(data);
+      
+      // Check enrollment status
+      if (data.id) {
+        checkEnrollment(data.id);
+      }
+    } catch (error) {
+      console.error('Error fetching course:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const checkEnrollment = async (courseId: string) => {
+    try {
+      const response = await fetch(`/api/enrollments/${courseId}`);
+      if (response.ok) {
+        const data = await response.json();
+        setEnrollmentStatus(data);
+      }
+    } catch (error) {
+      console.error('Error checking enrollment:', error);
+    }
+  };
+
+  const handleEnroll = async () => {
+    if (!course) return;
+    
+    setEnrolling(true);
+    try {
+      const response = await fetch('/api/enrollments', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ courseId: course.id }),
+      });
+
+      if (response.ok) {
+        await checkEnrollment(course.id);
+        toast.success('Successfully enrolled in course!');
+        router.push(`/courses/${course.slug}/lessons`);
+      } else {
+        const data = await response.json();
+        if (response.status === 401) {
+          toast.error('Please login to enroll in this course');
+          router.push('/login');
+        } else {
+          toast.error(data.error || 'Failed to enroll in course');
+        }
+      }
+    } catch (error) {
+      console.error('Error enrolling:', error);
+      toast.error('Failed to enroll in course');
+    } finally {
+      setEnrolling(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <p className="text-zinc-600 dark:text-zinc-400">Loading course...</p>
+      </div>
+    );
   }
 
-  // User's enrollment in this course (null if not enrolled)
-  const userEnrollment = {
-    id: 'enrollment-1',
-    userId: 'user-1',
-    courseId: '1',
-    enrolledAt: new Date('2026-01-10'),
-    lastAccessedAt: new Date('2026-01-14'),
-    currentLessonId: '3',
-    isCompleted: false,
+  if (!course) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <p className="text-zinc-600 dark:text-zinc-400">Course not found</p>
+      </div>
+    );
   }
 
   return (
@@ -66,13 +157,23 @@ export default function CoursePage({ params }: { params: { course_slug: string }
           
           <div className="flex flex-wrap gap-4 text-sm">
             <div className="flex items-center gap-2">
-              <span>📚 {course.lessons.length} lessons</span>
+              <span>📚 {course._count.lessons} lessons</span>
             </div>
             <div className="flex items-center gap-2">
-              <span>👥 {course.enrollments.length.toLocaleString()} enrolled</span>
+              <span>👥 {course._count.enrollments.toLocaleString()} enrolled</span>
             </div>
+            {course.level && (
+              <div className="flex items-center gap-2">
+                <span>📊 {course.level}</span>
+              </div>
+            )}
+            {course.duration && (
+              <div className="flex items-center gap-2">
+                <span>⏱️ {course.duration}</span>
+              </div>
+            )}
             <div className="flex items-center gap-2">
-              <span>📅 Updated {course.updatedAt.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}</span>
+              <span>📅 Updated {new Date(course.updatedAt).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}</span>
             </div>
           </div>
         </div>
@@ -125,14 +226,40 @@ export default function CoursePage({ params }: { params: { course_slug: string }
           <div className="bg-white dark:bg-zinc-800 rounded-lg border border-zinc-200 dark:border-zinc-700 p-6">
             <h3 className="font-semibold text-zinc-900 dark:text-zinc-100 mb-4">Course Details</h3>
             <div className="space-y-3 text-sm">
+              {course.instructor && (
+                <div className="flex justify-between">
+                  <span className="text-zinc-600 dark:text-zinc-400">Instructor</span>
+                  <span className="text-zinc-900 dark:text-zinc-100">{course.instructor}</span>
+                </div>
+              )}
+              {course.level && (
+                <div className="flex justify-between">
+                  <span className="text-zinc-600 dark:text-zinc-400">Level</span>
+                  <span className="text-zinc-900 dark:text-zinc-100">{course.level}</span>
+                </div>
+              )}
+              {course.duration && (
+                <div className="flex justify-between">
+                  <span className="text-zinc-600 dark:text-zinc-400">Duration</span>
+                  <span className="text-zinc-900 dark:text-zinc-100">{course.duration}</span>
+                </div>
+              )}
               <div className="flex justify-between">
                 <span className="text-zinc-600 dark:text-zinc-400">Lessons</span>
-                <span className="text-zinc-900 dark:text-zinc-100">{course.lessons.length}</span>
+                <span className="text-zinc-900 dark:text-zinc-100">{course._count.lessons}</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-zinc-600 dark:text-zinc-400">Enrolled</span>
-                <span className="text-zinc-900 dark:text-zinc-100">{course.enrollments.length.toLocaleString()}</span>
+                <span className="text-zinc-900 dark:text-zinc-100">{course._count.enrollments.toLocaleString()}</span>
               </div>
+              {course.price !== null && (
+                <div className="flex justify-between">
+                  <span className="text-zinc-600 dark:text-zinc-400">Price</span>
+                  <span className="text-zinc-900 dark:text-zinc-100 font-semibold">
+                    {course.price === 0 ? 'Free' : `$${course.price}`}
+                  </span>
+                </div>
+              )}
               <div className="flex justify-between">
                 <span className="text-zinc-600 dark:text-zinc-400">Status</span>
                 <span className="text-zinc-900 dark:text-zinc-100">
@@ -146,67 +273,67 @@ export default function CoursePage({ params }: { params: { course_slug: string }
               <div className="flex justify-between">
                 <span className="text-zinc-600 dark:text-zinc-400">Created</span>
                 <span className="text-zinc-900 dark:text-zinc-100">
-                  {course.createdAt.toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}
+                  {new Date(course.createdAt).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}
                 </span>
               </div>
               <div className="flex justify-between">
                 <span className="text-zinc-600 dark:text-zinc-400">Last Updated</span>
                 <span className="text-zinc-900 dark:text-zinc-100">
-                  {course.updatedAt.toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}
+                  {new Date(course.updatedAt).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}
                 </span>
               </div>
             </div>
             
-            {userEnrollment ? (
-              <div className="mt-6 space-y-3">
-                {/* Enrollment Progress */}
-                <div className="p-3 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg">
-                  <div className="flex items-center gap-2 text-sm font-medium text-green-700 dark:text-green-400 mb-2">
-                    <span>✓</span>
-                    <span>Enrolled</span>
-                  </div>
-                  <p className="text-xs text-green-600 dark:text-green-500">
-                    {userEnrollment.enrolledAt && new Date(userEnrollment.enrolledAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
-                  </p>
-                  {userEnrollment.lastAccessedAt && (
-                    <p className="text-xs text-green-600 dark:text-green-500 mt-1">
-                      Last accessed: {new Date(userEnrollment.lastAccessedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
-                    </p>
+            <div className="mt-6 space-y-3">
+              {enrollmentStatus.enrolled ? (
+                <>
+                  <Link
+                    href={`/courses/${course.slug}/lessons`}
+                    className="w-full block text-center bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-lg transition-colors"
+                  >
+                    {enrollmentStatus.enrollment?.isCompleted 
+                      ? 'Review Course' 
+                      : 'Continue Learning'}
+                  </Link>
+                  {enrollmentStatus.enrollment && (
+                    <div className="text-center">
+                      <p className="text-sm text-zinc-600 dark:text-zinc-400 mb-2">
+                        Progress: {enrollmentStatus.enrollment.progress}%
+                      </p>
+                      <div className="w-full bg-zinc-200 dark:bg-zinc-700 rounded-full h-2">
+                        <div 
+                          className="bg-blue-600 h-2 rounded-full transition-all"
+                          style={{ width: `${enrollmentStatus.enrollment.progress}%` }}
+                        />
+                      </div>
+                    </div>
                   )}
-                </div>
-
-                <Link
-                  href={`/courses/${course.slug}/lessons`}
-                  className="w-full block text-center bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-lg transition-colors"
-                >
-                  {userEnrollment.currentLessonId ? 'Continue Learning' : 'Start Course'}
-                </Link>
-                
-                {userEnrollment.isCompleted && (
-                  <div className="p-3 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-lg text-center">
-                    <span className="text-sm font-medium text-amber-700 dark:text-amber-400">🎉 Completed!</span>
-                  </div>
-                )}
-              </div>
-            ) : (
-              <div className="mt-6 space-y-3">
-                <button
-                  className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-lg transition-colors"
-                  onClick={() => {
-                    // TODO: Implement enrollment API call
-                    console.log('Enroll in course')
-                  }}
-                >
-                  Enroll Now
-                </button>
-                <Link
-                  href={`/courses/${course.slug}/lessons`}
-                  className="w-full block text-center bg-zinc-100 dark:bg-zinc-700 hover:bg-zinc-200 dark:hover:bg-zinc-600 text-zinc-900 dark:text-zinc-100 font-medium py-3 px-4 rounded-lg transition-colors"
-                >
-                  Preview Lessons
-                </Link>
-              </div>
-            )}
+                </>
+              ) : (
+                <>
+                  <button
+                    onClick={handleEnroll}
+                    disabled={enrolling}
+                    className="w-full bg-green-600 hover:bg-green-700 disabled:bg-zinc-400 disabled:cursor-not-allowed text-white font-medium py-3 px-4 rounded-lg transition-colors flex items-center justify-center gap-2"
+                  >
+                    {enrolling ? (
+                      <>
+                        <Loader2 className="animate-spin" size={18} />
+                        Enrolling...
+                      </>
+                    ) : (
+                      course.price && course.price > 0 ? `Enroll - $${course.price}` : 'Enroll for Free'
+                    )}
+                  </button>
+                  <Link
+                    href={`/courses/${course.slug}/lessons`}
+                    className="w-full block text-center bg-zinc-100 dark:bg-zinc-700 hover:bg-zinc-200 dark:hover:bg-zinc-600 text-zinc-900 dark:text-zinc-100 font-medium py-3 px-4 rounded-lg transition-colors"
+                  >
+                    Preview Lessons
+                  </Link>
+                </>
+              )}
+            </div>
           </div>
         </div>
       </div>

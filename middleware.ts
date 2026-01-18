@@ -22,6 +22,7 @@ export async function middleware(request: NextRequest) {
     '/courses',
     '/compiler',
     '/blogs',
+    '/api/courses',
     '/api/blogs',
     '/api/blogs/slug',
     '/api/auth/login',
@@ -31,6 +32,7 @@ export async function middleware(request: NextRequest) {
     '/api/auth/verify-otp',
     '/api/auth/complete-signup',
     '/api/send-otp',
+    '/api/auth/verify'
   ]
 
   // Admin-only routes
