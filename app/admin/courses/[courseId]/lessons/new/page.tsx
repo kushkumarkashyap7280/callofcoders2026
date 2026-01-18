@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import LessonForm from '@/components/course/LessonForm';
@@ -60,7 +60,7 @@ export default function NewLessonPage({
     }
   };
 
-  const handleSubmit = async (data: typeof formData) => {
+  const handleSubmit = useCallback(async (data: typeof formData) => {
     try {
       const response = await fetch(`/api/courses/${courseId}/lessons`, {
         method: 'POST',
@@ -80,7 +80,33 @@ export default function NewLessonPage({
       console.error('Error creating lesson:', error);
       toast.error(error instanceof Error ? error.message : 'Failed to create lesson');
     }
-  };
+  }, [courseId, router]);
+
+  const memoizedOnSubmit = useCallback((data: any) => {
+    return handleSubmit({
+      title: data.title ?? '',
+      slug: data.slug ?? '',
+      description: data.description ?? '',
+      sequenceNo: data.sequenceNo ?? 1,
+      content: data.content ?? '',
+      duration: data.duration ?? '',
+      isPreview: data.isPreview ?? false,
+      videoUrl: data.videoUrl ?? '',
+    });
+  }, [handleSubmit]);
+
+  const memoizedOnDataChange = useCallback((data: any) => {
+    setFormData({
+      title: data.title ?? '',
+      slug: data.slug ?? '',
+      description: data.description ?? '',
+      sequenceNo: data.sequenceNo ?? 1,
+      content: data.content ?? '',
+      duration: data.duration ?? '',
+      isPreview: data.isPreview ?? false,
+      videoUrl: data.videoUrl ?? '',
+    });
+  }, []);
 
   return (
     <div className="min-h-screen bg-zinc-50 dark:bg-zinc-900">
@@ -133,8 +159,8 @@ export default function NewLessonPage({
               mode="new"
               courseId={courseId}
               initialData={formData}
-              onSubmit={handleSubmit}
-              onDataChange={setFormData}
+              onSubmit={memoizedOnSubmit}
+              onDataChange={memoizedOnDataChange}
             />
           )}
         </div>

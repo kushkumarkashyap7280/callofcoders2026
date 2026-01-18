@@ -28,7 +28,7 @@ export async function POST(
   try {
     const { id } = await params;
     const body = await request.json();
-    const { slug, title, sequenceNo, content } = body;
+    const { slug, title, sequenceNo, content, description, duration, isPreview, videoUrl } = body;
 
     const lesson = await prisma.lesson.create({
       data: {
@@ -36,6 +36,11 @@ export async function POST(
         title,
         sequenceNo,
         content,
+        // Optional fields - only set when provided
+        description: description ?? undefined,
+        duration: duration ?? undefined,
+        isPreview: typeof isPreview === 'boolean' ? isPreview : undefined,
+        videoUrl: videoUrl ?? undefined,
         courseId: id,
       },
     });

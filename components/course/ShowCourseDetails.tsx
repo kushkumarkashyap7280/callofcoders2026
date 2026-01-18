@@ -7,6 +7,9 @@ import { useAuth } from '../auth/AuthProvider'
 import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
+
+
+
 import { 
   BookOpen, 
   Clock, 
@@ -69,6 +72,7 @@ function ShowCourseDetails({ course }: { course: Course }) {
       const response = await fetch(`/api/courses/${course.id}/lessons`)
       if (response.ok) {
         const data = await response.json()
+        console.log('Fetched lessons: in showcoursedetails', data)
         setLessons(data)
       }
     } catch (error) {

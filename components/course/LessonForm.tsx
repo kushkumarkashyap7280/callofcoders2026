@@ -6,22 +6,52 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 
+
+/* 
+ lessons schema table
+
+ model Lesson {
+  id          String   @id @default(uuid())
+  slug        String   // e.g. "setup-environment"
+  title       String   // Needed for the sidebar
+  description String?  // Short description for lesson overview
+  sequenceNo  Int      @map("sequence_no")
+  content     String   @db.Text // @db.Text is needed for long MDX strings
+  duration    String?  // e.g., "15 min", "30 min"
+  isPreview   Boolean  @default(false) @map("is_preview") // Free preview lessons
+  videoUrl    String?  @map("video_url") // Optional video URL
+  
+  courseId    String   @map("course_id")
+  course      Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  
+  completions LessonCompletion[]
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Unique constraint: A slug must be unique *within* a specific course, 
+  // but two different courses can both have an "introduction" lesson.
+  @@unique([courseId, slug])
+  @@map("lessons")
+  }
+*/
+
 interface LessonFormData {
   title: string;
   slug: string;
-  description: string;
+  description?: string;
   sequenceNo: number;
   content: string;
-  duration: string;
+  duration?: string;
   isPreview: boolean;
-  videoUrl: string;
+  videoUrl?: string;
 }
 
 interface LessonFormProps {
   mode: 'new' | 'edit';
   courseId: string;
   initialData?: LessonFormData;
-  onSubmit: (data: LessonFormData) => void;
+  onSubmit: (data: LessonFormData) => Promise<unknown> | void;
   onDelete?: () => void;
   onDataChange?: (data: LessonFormData) => void;
 }
@@ -29,21 +59,21 @@ interface LessonFormProps {
 export default function LessonForm({ 
   mode, 
   courseId,
-  initialData, 
-  onSubmit, 
-  onDelete, 
-  onDataChange 
+  initialData,
+  onSubmit,
+  onDelete,
+  onDataChange
 }: LessonFormProps) {
   const [formData, setFormData] = useState<LessonFormData>(
     initialData || {
       title: '',
       slug: '',
-      description: '',
+      description: undefined,
       sequenceNo: 1,
       content: '',
-      duration: '',
+      duration: undefined,
       isPreview: false,
-      videoUrl: '',
+      videoUrl: undefined,
     }
   );
   const [loading, setLoading] = useState(false);
@@ -104,8 +134,8 @@ export default function LessonForm({
         <Label htmlFor="description">Description (optional)</Label>
         <textarea
           id="description"
-          value={formData.description}
-          onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+          value={formData.description || ''}
+          onChange={(e) => setFormData({ ...formData, description: e.target.value || undefined })}
           placeholder="Brief description of this lesson"
           className="w-full min-h-20 p-3 border rounded-lg bg-background"
         />
@@ -129,11 +159,11 @@ export default function LessonForm({
       </div>
 
         <div>
-          <Label htmlFor="duration">Duration</Label>
+          <Label htmlFor="duration">Duration (optional)</Label>
           <Input
             id="duration"
-            value={formData.duration}
-            onChange={(e) => setFormData({ ...formData, duration: e.target.value })}
+            value={formData.duration || ''}
+            onChange={(e) => setFormData({ ...formData, duration: e.target.value || undefined })}
             placeholder="e.g., 15 min, 30 min"
           />
         </div>
@@ -143,8 +173,8 @@ export default function LessonForm({
         <Label htmlFor="videoUrl">Video URL (optional)</Label>
         <Input
           id="videoUrl"
-          value={formData.videoUrl}
-          onChange={(e) => setFormData({ ...formData, videoUrl: e.target.value })}
+          value={formData.videoUrl || ''}
+          onChange={(e) => setFormData({ ...formData, videoUrl: e.target.value || undefined })}
           placeholder="https://youtube.com/watch?v=..."
         />
       </div>

@@ -8,6 +8,36 @@ import LessonPreviewRender from '@/components/course/LessonPreviewRender';
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
 
+/* 
+ lessons schema table
+
+ model Lesson {
+  id          String   @id @default(uuid())
+  slug        String   // e.g. "setup-environment"
+  title       String   // Needed for the sidebar
+  description String?  // Short description for lesson overview
+  sequenceNo  Int      @map("sequence_no")
+  content     String   @db.Text // @db.Text is needed for long MDX strings
+  duration    String?  // e.g., "15 min", "30 min"
+  isPreview   Boolean  @default(false) @map("is_preview") // Free preview lessons
+  videoUrl    String?  @map("video_url") // Optional video URL
+  
+  courseId    String   @map("course_id")
+  course      Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  
+  completions LessonCompletion[]
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Unique constraint: A slug must be unique *within* a specific course, 
+  // but two different courses can both have an "introduction" lesson.
+  @@unique([courseId, slug])
+  @@map("lessons")
+  }
+*/
+
+
 export default function EditLessonPage({ 
   params 
 }: { 
@@ -18,7 +48,16 @@ export default function EditLessonPage({
   const [lessonId, setLessonId] = useState<string>('');
   const [showPreview, setShowPreview] = useState(false);
   const [course, setCourse] = useState<{ title: string } | null>(null);
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<{
+    title: string;
+    slug: string;
+    description?: string;
+    sequenceNo: number;
+    content: string;
+    duration?: string;
+    isPreview: boolean;
+    videoUrl?: string;
+  }>({
     title: '',
     slug: '',
     description: '',
@@ -41,9 +80,11 @@ export default function EditLessonPage({
   const fetchLesson = async (id: string) => {
     try {
       const response = await fetch(`/api/courses/${courseId || 'temp'}/lessons/${id}`);
+      console.log('Fetching lesson with ID so in edit form :', id);
       if (!response.ok) throw new Error('Failed to fetch lesson');
       
       const lesson = await response.json();
+      console.log('Fetched lesson data:', lesson);
       setFormData({
         title: lesson.title,
         slug: lesson.slug,
@@ -66,7 +107,7 @@ export default function EditLessonPage({
     }
   };
 
-  const handleSubmit = async (data: typeof formData) => {
+  const handleSubmit = async (data: { title: string; slug: string; description?: string; sequenceNo: number; content: string; duration?: string; isPreview: boolean; videoUrl?: string; }) => {
     try {
       const response = await fetch(`/api/courses/${courseId}/lessons/${lessonId}`, {
         method: 'PUT',

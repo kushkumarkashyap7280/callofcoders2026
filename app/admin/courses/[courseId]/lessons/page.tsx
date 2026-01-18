@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { Plus, Edit, Trash2, MoveUp, MoveDown, ArrowLeft } from 'lucide-react'
+import { Plus, Edit, Trash2, ArrowLeft } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
 
@@ -84,38 +84,7 @@ export default function AdminCourseLessonsPage({
     }
   };
 
-  const handleReorder = async (lessonId: string, direction: 'up' | 'down') => {
-    const currentIndex = lessons.findIndex(l => l.id === lessonId);
-    if (currentIndex === -1) return;
-
-    const newIndex = direction === 'up' ? currentIndex - 1 : currentIndex + 1;
-    if (newIndex < 0 || newIndex >= lessons.length) return;
-
-    try {
-      const currentLesson = lessons[currentIndex];
-      const swapLesson = lessons[newIndex];
-
-      // Update both lessons' sequence numbers
-      await Promise.all([
-        fetch(`/api/courses/${courseId}/lessons/${currentLesson.id}`, {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ ...currentLesson, sequenceNo: swapLesson.sequenceNo }),
-        }),
-        fetch(`/api/courses/${courseId}/lessons/${swapLesson.id}`, {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ ...swapLesson, sequenceNo: currentLesson.sequenceNo }),
-        }),
-      ]);
-
-      toast.success('Lesson order updated!');
-      fetchLessons(courseId);
-    } catch (error) {
-      console.error('Error reordering lesson:', error);
-      toast.error('Failed to reorder lesson');
-    }
-  };
+  // Reordering removed — sequence managed elsewhere
 
   if (loading) {
     return (
@@ -206,28 +175,8 @@ export default function AdminCourseLessonsPage({
                     </p>
                   </div>
 
-                  {/* Actions */}
+                  {/* Actions: Edit and Delete only */}
                   <div className="flex flex-col sm:flex-row gap-2">
-                    {/* Reorder Buttons */}
-                    <div className="flex gap-1">
-                      <button
-                        onClick={() => handleReorder(lesson.id, 'up')}
-                        disabled={index === 0}
-                        className="p-2 bg-zinc-100 dark:bg-zinc-700 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-200 dark:hover:bg-zinc-600 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                        title="Move Up"
-                      >
-                        <MoveUp className="w-4 h-4" />
-                      </button>
-                      <button
-                        onClick={() => handleReorder(lesson.id, 'down')}
-                        disabled={index === lessons.length - 1}
-                        className="p-2 bg-zinc-100 dark:bg-zinc-700 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-200 dark:hover:bg-zinc-600 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                        title="Move Down"
-                      >
-                        <MoveDown className="w-4 h-4" />
-                      </button>
-                    </div>
-
                     <Link
                       href={`/admin/courses/${courseId}/lessons/${lesson.id}/edit`}
                       className="p-2 bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-900/30 rounded-lg transition-colors"

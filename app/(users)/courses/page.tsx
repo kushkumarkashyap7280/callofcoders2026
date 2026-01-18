@@ -1,7 +1,9 @@
-'use client';
-
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import prisma from '@/lib/prisma';
+import { cache } from 'react';
+
+// Revalidate this page every 5 minutes (300 seconds)
+export const revalidate = 300;
 
 interface Course {
   id: string;
@@ -19,33 +21,28 @@ interface Course {
   };
 }
 
-export default function CoursesPage() {
-  const [courses, setCourses] = useState<Course[]>([]);
-  const [loading, setLoading] = useState(true);
+// Cache the fetch for all published courses
+const getPublishedCourses = cache(async (): Promise<Course[]> => {
+  console.log('Fetching all published courses');
+  const courses = await prisma.course.findMany({
+    where: { isPublished: true },
+    orderBy: { createdAt: 'desc' },
+    include: {
+      _count: {
+        select: { lessons: true },
+      },
+    },
+  });
 
-  useEffect(() => {
-    fetchCourses();
-  }, []);
+  return courses.map((course) => ({
+    ...course,
+    createdAt: course.createdAt.toISOString(),
+    updatedAt: course.updatedAt.toISOString(),
+  }));
+});
 
-  const fetchCourses = async () => {
-    try {
-      const response = await fetch('/api/courses?published=true');
-      const data = await response.json();
-      setCourses(data);
-    } catch (error) {
-      console.error('Error fetching courses:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  if (loading) {
-    return (
-      <div className="container mx-auto px-4 py-10">
-        <p className="text-zinc-600 dark:text-zinc-400">Loading courses...</p>
-      </div>
-    );
-  }
+export default async function CoursesPage() {
+  const courses = await getPublishedCourses();
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-7xl">
